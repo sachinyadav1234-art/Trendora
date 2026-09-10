@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hello-world",
+      "settings": {}
+    },
+    "featured_products": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "shop_by_category": {
+      "type": "shop-by-category",
+      "settings": {}
+    },
+    "promo_banner": {
+      "type": "promo-banner",
+      "settings": {}
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "featured_products",
+    "shop_by_category",
+    "promo_banner",
+    "newsletter"
+  ]
+}

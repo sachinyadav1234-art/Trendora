@@ -1,0 +1,386 @@
+<header class="trendora-header">
+
+  <div class="trendora-header__inner">
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="trendora-logo">
+      Trendora
+    </a>
+
+
+    <!-- Desktop Navigation -->
+    <nav class="trendora-nav">
+
+      <nav class="trendora-nav">
+  <a href="{{ routes.root_url }}">Home</a>
+  <a href="{{ routes.all_products_collection_url }}">Shop</a>
+  <a href="{{ routes.collections_url }}">Collections</a>
+  <a href="{{ routes.search_url }}">Search</a>
+
+
+    </nav>
+
+
+    <!-- Header Actions -->
+    <div class="trendora-header__actions">
+
+      <!-- Search -->
+      <a
+        href="{{ routes.search_url }}"
+        class="trendora-header__icon"
+        aria-label="Search"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-4-4"></path>
+        </svg>
+      </a>
+
+
+      <!-- Account -->
+      <a
+        href="{{ routes.account_url }}"
+        class="trendora-header__icon"
+        aria-label="Account"
+      >
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <circle cx="12" cy="7" r="4"></circle>
+          <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path>
+        </svg>
+      </a>
+
+
+      <!-- Cart -->
+      <a
+        href="{{ routes.cart_url }}"
+        class="trendora-header__cart"
+        aria-label="Cart"
+      >
+
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <path d="M6 8h12l1 12H5L6 8Z"></path>
+          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+
+        {% if cart.item_count > 0 %}
+          <span class="trendora-cart-count">
+            {{ cart.item_count }}
+          </span>
+        {% endif %}
+
+      </a>
+
+    </div>
+
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="trendora-menu-button"
+      type="button"
+      onclick="trendoraToggleMenu()"
+      aria-label="Open menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+
+  <!-- Mobile Navigation -->
+  <div
+    class="trendora-mobile-menu"
+    id="trendoraMobileMenu"
+  >
+
+    <a href="{{ routes.root_url }}">
+      Home
+    </a>
+
+    <a href="/collections/all">
+      Shop All
+    </a>
+
+    {% for collection in collections limit: 5 %}
+      {% unless collection.handle == 'all' %}
+        <a href="{{ collection.url }}">
+          {{ collection.title }}
+        </a>
+      {% endunless %}
+    {% endfor %}
+
+    <a href="{{ routes.search_url }}">
+      Search
+    </a>
+
+    <a href="{{ routes.cart_url }}">
+      Cart
+      {% if cart.item_count > 0 %}
+        ({{ cart.item_count }})
+      {% endif %}
+    </a>
+
+  </div>
+
+</header>
+
+
+<style>
+
+/* =========================
+   TRENDORA HEADER
+========================= */
+
+.trendora-header {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.trendora-header__inner {
+  max-width: 1450px;
+  min-height: 80px;
+  margin: 0 auto;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+
+/* Logo */
+
+.trendora-logo {
+  color: #171717;
+  text-decoration: none;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+
+/* Navigation */
+
+.trendora-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.trendora-nav a {
+  position: relative;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.trendora-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background: #111;
+  transition: width .25s ease;
+}
+
+.trendora-nav a:hover::after {
+  width: 100%;
+}
+
+
+/* Actions */
+
+.trendora-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.trendora-header__icon,
+.trendora-header__cart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #171717;
+  text-decoration: none;
+}
+
+.trendora-cart-count {
+  position: absolute;
+  top: -9px;
+  right: -10px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #171717;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+/* Mobile button */
+
+.trendora-menu-button {
+  display: none;
+  width: 38px;
+  height: 38px;
+  padding: 7px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.trendora-menu-button span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin: 5px 0;
+  background: #171717;
+}
+
+
+/* Mobile menu */
+
+.trendora-mobile-menu {
+  display: none;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .trendora-nav {
+    gap: 18px;
+  }
+
+  .trendora-nav a {
+    font-size: 13px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .trendora-header__inner {
+    min-height: 70px;
+    padding: 0 20px;
+  }
+
+  .trendora-nav {
+    display: none;
+  }
+
+  .trendora-header__actions {
+    margin-left: auto;
+    gap: 16px;
+  }
+
+  .trendora-header__actions .trendora-header__icon:first-child {
+    display: none;
+  }
+
+  .trendora-menu-button {
+    display: block;
+  }
+
+
+  .trendora-mobile-menu {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid #eee;
+    background: #fff;
+  }
+
+  .trendora-mobile-menu.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trendora-mobile-menu a {
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+    color: #171717;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+
+  .trendora-logo {
+    font-size: 23px;
+  }
+
+  .trendora-header__actions {
+    gap: 12px;
+  }
+
+}
+
+</style>
+
+
+<script>
+
+function trendoraToggleMenu() {
+
+  const menu = document.getElementById(
+    'trendoraMobileMenu'
+  );
+
+  if (!menu) return;
+
+  menu.classList.toggle('active');
+
+}
+
+</script>

@@ -1,0 +1,83 @@
+<section class="trendora-promo">
+  <div class="trendora-promo__content">
+    <p class="trendora-promo__eyebrow">TRENDORA EXCLUSIVE</p>
+
+    <h2>Upgrade Your<br>Everyday Style.</h2>
+
+    <p class="trendora-promo__description">
+      Discover premium styles made for modern everyday living.
+      Simple. Bold. Trendora.
+    </p>
+
+    <a href="/collections/all" class="trendora-promo__button">
+      Explore Collection →
+    </a>
+  </div>
+</section>
+
+<style>
+  .trendora-promo {
+    margin: 40px 7%;
+    padding: 90px 8%;
+    background: #1f1f1f;
+    color: #ffffff;
+  }
+
+  .trendora-promo__content {
+    max-width: 650px;
+  }
+
+  .trendora-promo__eyebrow {
+    margin: 0 0 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  .trendora-promo h2 {
+    margin: 0 0 25px;
+    font-size: 58px;
+    line-height: 1.05;
+    font-weight: 700;
+  }
+
+  .trendora-promo__description {
+    max-width: 500px;
+    margin: 0 0 35px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #dddddd;
+  }
+
+  .trendora-promo__button {
+    display: inline-block;
+    padding: 15px 25px;
+    background: #ffffff;
+    color: #111111;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s ease;
+  }
+
+  .trendora-promo__button:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    .trendora-promo {
+      margin: 20px 5%;
+      padding: 60px 8%;
+    }
+
+    .trendora-promo h2 {
+      font-size: 40px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Promo Banner",
+  "settings": []
+}
+{% endschema %}

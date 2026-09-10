@@ -1,0 +1,161 @@
+<section class="trendora-newsletter">
+  <div class="trendora-newsletter__content">
+
+    <p class="trendora-newsletter__eyebrow">
+      STAY IN THE LOOP
+    </p>
+
+    <h2>Get the latest from Trendora.</h2>
+
+    <p class="trendora-newsletter__text">
+      Sign up for new arrivals, exclusive offers and style updates.
+    </p>
+
+    {% form 'customer', class: 'trendora-newsletter__form' %}
+
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      <div class="trendora-newsletter__input-row">
+
+        <input
+          type="email"
+          name="contact[email]"
+          class="trendora-newsletter__input"
+          value="{{ form.email }}"
+          placeholder="Enter your email address"
+          autocomplete="email"
+          required
+        >
+
+        <button type="submit" class="trendora-newsletter__button">
+          Subscribe →
+        </button>
+
+      </div>
+
+      {% if form.posted_successfully? %}
+        <p class="trendora-newsletter__success">
+          Thanks for subscribing to Trendora! 🎉
+        </p>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="trendora-newsletter__error">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+    {% endform %}
+
+  </div>
+</section>
+
+
+<style>
+  .trendora-newsletter {
+    padding: 100px 7%;
+    background: #f3f1ed;
+    text-align: center;
+  }
+
+  .trendora-newsletter__content {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .trendora-newsletter__eyebrow {
+    margin: 0 0 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  .trendora-newsletter h2 {
+    margin: 0 0 20px;
+    font-size: 48px;
+    line-height: 1.1;
+    color: #222;
+  }
+
+  .trendora-newsletter__text {
+    margin: 0 auto 35px;
+    max-width: 500px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #555;
+  }
+
+  .trendora-newsletter__input-row {
+    display: flex;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  .trendora-newsletter__input {
+    flex: 1;
+    min-width: 0;
+    padding: 17px 20px;
+    border: 1px solid #222;
+    border-right: none;
+    background: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .trendora-newsletter__button {
+    padding: 17px 28px;
+    border: 1px solid #222;
+    background: #222;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .trendora-newsletter__button:hover {
+    opacity: 0.85;
+  }
+
+  .trendora-newsletter__success {
+    margin-top: 20px;
+    font-weight: 600;
+  }
+
+  .trendora-newsletter__error {
+    margin-top: 20px;
+    color: #b42318;
+  }
+
+  @media (max-width: 600px) {
+    .trendora-newsletter {
+      padding: 70px 5%;
+    }
+
+    .trendora-newsletter h2 {
+      font-size: 36px;
+    }
+
+    .trendora-newsletter__input-row {
+      display: block;
+    }
+
+    .trendora-newsletter__input {
+      width: 100%;
+      border-right: 1px solid #222;
+      box-sizing: border-box;
+    }
+
+    .trendora-newsletter__button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": []
+}
+{% endschema %}

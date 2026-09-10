@@ -1,0 +1,329 @@
+<footer class="trendora-footer">
+
+  <div class="trendora-footer__top">
+
+    <!-- Brand -->
+    <div class="trendora-footer__brand">
+
+      <a href="{{ routes.root_url }}" class="trendora-footer__logo">
+        Trendora
+      </a>
+
+      <p>
+        Modern style for everyday confidence.
+        Discover products designed to make your
+        everyday look stand out.
+      </p>
+
+    </div>
+
+
+    <!-- Shop -->
+    <div class="trendora-footer__column">
+
+      <h3>Shop</h3>
+
+      <a href="/collections/all">
+        All Products
+      </a>
+
+      {% for collection in collections limit: 4 %}
+        {% unless collection.handle == 'all' %}
+          <a href="{{ collection.url }}">
+            {{ collection.title }}
+          </a>
+        {% endunless %}
+      {% endfor %}
+
+    </div>
+
+
+    <!-- Company -->
+    <div class="trendora-footer__column">
+
+      <h3>Explore</h3>
+
+      <a href="{{ routes.root_url }}">
+        Home
+      </a>
+
+      <a href="{{ routes.search_url }}">
+        Search
+      </a>
+
+      <a href="{{ routes.cart_url }}">
+        Cart
+      </a>
+
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}">
+          My Account
+        </a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- Newsletter -->
+    <div class="trendora-footer__newsletter">
+
+      <h3>Stay in the loop.</h3>
+
+      <p>
+        Subscribe for new arrivals, offers
+        and Trendora updates.
+      </p>
+
+      {% form 'customer', class: 'trendora-newsletter-form' %}
+
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="Your email address"
+          autocomplete="email"
+          required
+        >
+
+        <input
+          type="hidden"
+          name="contact[tags]"
+          value="newsletter"
+        >
+
+        <button type="submit">
+          →
+        </button>
+
+      {% endform %}
+
+      {% if form.posted_successfully? %}
+        <p class="trendora-success">
+          Thanks for subscribing!
+        </p>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+
+  <!-- Bottom -->
+  <div class="trendora-footer__bottom">
+
+    <p>
+      © {{ 'now' | date: '%Y' }} Trendora.
+      All rights reserved.
+    </p>
+
+    <div class="trendora-footer__links">
+
+      {% if shop.privacy_policy %}
+        <a href="{{ shop.privacy_policy.url }}">
+          Privacy
+        </a>
+      {% endif %}
+
+      {% if shop.refund_policy %}
+        <a href="{{ shop.refund_policy.url }}">
+          Refund Policy
+        </a>
+      {% endif %}
+
+      {% if shop.terms_of_service %}
+        <a href="{{ shop.terms_of_service.url }}">
+          Terms
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<style>
+
+.trendora-footer {
+  margin-top: 100px;
+  padding: 75px 7% 25px;
+  background: #171717;
+  color: white;
+}
+
+
+/* Top */
+
+.trendora-footer__top {
+  max-width: 1450px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+  gap: 60px;
+  padding-bottom: 70px;
+}
+
+
+/* Brand */
+
+.trendora-footer__logo {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.trendora-footer__brand p {
+  max-width: 350px;
+  margin-top: 25px;
+  color: #aaa;
+  line-height: 1.7;
+}
+
+
+/* Columns */
+
+.trendora-footer__column h3,
+.trendora-footer__newsletter h3 {
+  margin: 0 0 22px;
+  font-size: 15px;
+}
+
+.trendora-footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.trendora-footer__column a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color .2s ease;
+}
+
+.trendora-footer__column a:hover {
+  color: white;
+}
+
+
+/* Newsletter */
+
+.trendora-footer__newsletter p {
+  margin: 0 0 20px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.trendora-newsletter-form {
+  display: flex;
+  max-width: 430px;
+}
+
+.trendora-newsletter-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #555;
+  background: transparent;
+  color: white;
+  outline: none;
+}
+
+.trendora-newsletter-form input::placeholder {
+  color: #888;
+}
+
+.trendora-newsletter-form button {
+  width: 55px;
+  border: 1px solid #555;
+  background: white;
+  color: #171717;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.trendora-success {
+  margin-top: 15px !important;
+  color: #8fd19e !important;
+}
+
+
+/* Bottom */
+
+.trendora-footer__bottom {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding-top: 25px;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.trendora-footer__bottom p {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.trendora-footer__links {
+  display: flex;
+  gap: 25px;
+}
+
+.trendora-footer__links a {
+  color: #888;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.trendora-footer__links a:hover {
+  color: white;
+}
+
+
+/* Tablet */
+
+@media (max-width: 900px) {
+
+  .trendora-footer__top {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px 35px;
+  }
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .trendora-footer {
+    margin-top: 70px;
+    padding: 55px 20px 20px;
+  }
+
+  .trendora-footer__top {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-bottom: 45px;
+  }
+
+  .trendora-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .trendora-footer__links {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+}
+
+</style>

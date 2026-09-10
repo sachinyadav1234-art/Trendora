@@ -1,0 +1,390 @@
+<section class="trendora-product">
+  <div class="trendora-product-grid">
+
+    <!-- PRODUCT GALLERY -->
+    <div class="trendora-gallery">
+      {% if product.images.size > 0 %}
+        <div class="trendora-main-image">
+          <img
+            id="trendoraProductImage"
+            src="{{ product.featured_image | image_url: width: 1200 }}"
+            alt="{{ product.title | escape }}"
+          >
+        </div>
+
+        {% if product.images.size > 1 %}
+          <div class="trendora-thumbnails">
+            {% for image in product.images %}
+              <button
+                type="button"
+                onclick="changeTrendoraImage('{{ image | image_url: width: 1200 }}')"
+              >
+                <img
+                  src="{{ image | image_url: width: 180 }}"
+                  alt="{{ product.title | escape }}"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="trendora-no-image">
+          No image available
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- PRODUCT INFORMATION -->
+    <div class="trendora-product-info">
+
+      <span class="trendora-label">TRENDORA COLLECTION</span>
+
+      <h1>{{ product.title }}</h1>
+
+      <div class="trendora-price">
+        {{ product.price | money }}
+      </div>
+
+      {% if product.available %}
+        <div class="trendora-stock">
+          ● In Stock
+        </div>
+      {% else %}
+        <div class="trendora-sold">
+          Sold Out
+        </div>
+      {% endif %}
+
+      {% if product.description != blank %}
+        <div class="trendora-description">
+          {{ product.description }}
+        </div>
+      {% endif %}
+
+      {% form 'product', product, id: 'trendora-product-form' %}
+
+        {% if product.has_only_default_variant %}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ product.selected_or_first_available_variant.id }}"
+          >
+        {% else %}
+          <label class="variant-label">Choose option</label>
+
+          <select name="id" class="trendora-select">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == product.selected_or_first_available_variant %}
+                  selected
+                {% endif %}
+                {% unless variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ variant.title }}
+                {% unless variant.available %}
+                  - Sold Out
+                {% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        <div class="quantity-row">
+          <label for="trendora-quantity">Quantity</label>
+
+          <div class="quantity-box">
+            <button type="button" onclick="decreaseQuantity()">−</button>
+
+            <input
+              id="trendora-quantity"
+              type="number"
+              name="quantity"
+              value="1"
+              min="1"
+            >
+
+            <button type="button" onclick="increaseQuantity()">+</button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="trendora-add-cart"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {% if product.available %}
+            Add to Cart →
+          {% else %}
+            Sold Out
+          {% endif %}
+        </button>
+
+      {% endform %}
+
+      <div class="trendora-benefits">
+        <div>
+          <strong>✓</strong>
+          Premium Quality
+        </div>
+
+        <div>
+          <strong>✓</strong>
+          Secure Checkout
+        </div>
+
+        <div>
+          <strong>✓</strong>
+          Fast Delivery
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<style>
+.trendora-product {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 6%;
+}
+
+.trendora-product-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* Gallery */
+
+.trendora-main-image {
+  background: #f4f2ee;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.trendora-main-image img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.trendora-main-image img:hover {
+  transform: scale(1.04);
+}
+
+.trendora-thumbnails {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  overflow-x: auto;
+}
+
+.trendora-thumbnails button {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 5px;
+  cursor: pointer;
+  width: 90px;
+  height: 90px;
+}
+
+.trendora-thumbnails button:hover {
+  border-color: #111;
+}
+
+.trendora-thumbnails img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.trendora-no-image {
+  background: #f4f2ee;
+  padding: 150px 20px;
+  text-align: center;
+}
+
+/* Product info */
+
+.trendora-product-info {
+  padding-top: 20px;
+}
+
+.trendora-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+.trendora-product-info h1 {
+  font-size: 52px;
+  line-height: 1.05;
+  margin: 18px 0;
+  font-weight: 800;
+}
+
+.trendora-price {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.trendora-stock {
+  color: #287a43;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.trendora-sold {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.trendora-description {
+  color: #555;
+  line-height: 1.8;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.variant-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.trendora-select {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #bbb;
+  background: white;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+/* Quantity */
+
+.quantity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.quantity-box {
+  display: flex;
+  border: 1px solid #bbb;
+  align-items: center;
+}
+
+.quantity-box button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.quantity-box input {
+  width: 45px;
+  height: 42px;
+  border: 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Add cart */
+
+.trendora-add-cart {
+  width: 100%;
+  padding: 18px;
+  background: #171717;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.trendora-add-cart:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+.trendora-add-cart:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* Benefits */
+
+.trendora-benefits {
+  border-top: 1px solid #ddd;
+  margin-top: 35px;
+  padding-top: 25px;
+}
+
+.trendora-benefits div {
+  padding: 8px 0;
+  color: #555;
+}
+
+.trendora-benefits strong {
+  color: #287a43;
+  margin-right: 8px;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+  .trendora-product {
+    padding: 50px 20px;
+  }
+
+  .trendora-product-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .trendora-product-info h1 {
+    font-size: 38px;
+  }
+}
+</style>
+
+
+<script>
+function changeTrendoraImage(imageUrl) {
+  document.getElementById("trendoraProductImage").src = imageUrl;
+}
+
+function increaseQuantity() {
+  const input = document.getElementById("trendora-quantity");
+  input.value = parseInt(input.value) + 1;
+}
+
+function decreaseQuantity() {
+  const input = document.getElementById("trendora-quantity");
+
+  if (parseInt(input.value) > 1) {
+    input.value = parseInt(input.value) - 1;
+  }
+}
+</script>

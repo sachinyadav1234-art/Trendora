@@ -1,0 +1,153 @@
+/* =========================================
+   TRENDORA GLOBAL STYLES
+========================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #171717;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  transition: opacity 0.2s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+/* =========================================
+   PAGE WIDTH
+========================================= */
+
+.page-width {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+
+/* =========================================
+   FOCUS ACCESSIBILITY
+========================================= */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 3px;
+}
+
+
+/* =========================================
+   SELECTION
+========================================= */
+
+::selection {
+  background: #171717;
+  color: #ffffff;
+}
+
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f1ed;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #777;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #171717;
+}
+
+
+/* =========================================
+   SHOPIFY FORMS
+========================================= */
+
+.shopify-challenge__container {
+  max-width: 700px;
+  margin: 100px auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.shopify-challenge__button {
+  padding: 14px 28px;
+  border: 0;
+  background: #171717;
+  color: #fff;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .page-width {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+}

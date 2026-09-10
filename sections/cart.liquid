@@ -1,0 +1,397 @@
+<section class="trendora-cart">
+  <div class="trendora-cart-inner">
+
+    <div class="trendora-cart-header">
+      <span>CART</span>
+      <h1>Your Shopping Bag</h1>
+      <p>Review your items before checkout.</p>
+    </div>
+
+    {% if cart.item_count > 0 %}
+
+      <form action="{{ routes.cart_url }}" method="post">
+
+        <div class="trendora-cart-layout">
+
+          <!-- CART ITEMS -->
+          <div class="trendora-cart-items">
+
+            {% for item in cart.items %}
+
+              <div class="trendora-cart-item">
+
+                <div class="trendora-cart-image">
+                  {% if item.image %}
+                    <img
+                      src="{{ item.image | image_url: width: 400 }}"
+                      alt="{{ item.title | escape }}"
+                    >
+                  {% endif %}
+                </div>
+
+                <div class="trendora-cart-details">
+
+                  <h2>{{ item.product.title }}</h2>
+
+                  {% unless item.product.has_only_default_variant %}
+                    <p class="trendora-variant">
+                      {{ item.variant.title }}
+                    </p>
+                  {% endunless %}
+
+                  <p class="trendora-item-price">
+                    {{ item.final_price | money }}
+                  </p>
+
+                  <div class="trendora-cart-bottom">
+
+                    <div class="trendora-quantity">
+                      <label>Quantity</label>
+
+                      <input
+                        type="number"
+                        name="updates[]"
+                        value="{{ item.quantity }}"
+                        min="0"
+                      >
+                    </div>
+
+                    <a
+                      href="{{ item.url_to_remove }}"
+                      class="trendora-remove"
+                    >
+                      Remove
+                    </a>
+
+                  </div>
+
+                </div>
+
+                <div class="trendora-line-price">
+                  {{ item.final_line_price | money }}
+                </div>
+
+              </div>
+
+            {% endfor %}
+
+            <button
+              type="submit"
+              name="update"
+              class="trendora-update"
+            >
+              Update Cart
+            </button>
+
+          </div>
+
+          <!-- ORDER SUMMARY -->
+          <aside class="trendora-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="trendora-summary-row">
+              <span>Subtotal</span>
+              <strong>{{ cart.total_price | money }}</strong>
+            </div>
+
+            <div class="trendora-summary-note">
+              Taxes and shipping calculated at checkout.
+            </div>
+
+            <button
+              type="submit"
+              name="checkout"
+              class="trendora-checkout"
+            >
+              Proceed to Checkout →
+            </button>
+
+            <a
+              href="{{ routes.all_products_collection_url }}"
+              class="trendora-continue"
+            >
+              Continue Shopping
+            </a>
+
+          </aside>
+
+        </div>
+
+      </form>
+
+    {% else %}
+
+      <div class="trendora-empty-cart">
+
+        <div class="trendora-empty-icon">🛍</div>
+
+        <h2>Your cart is empty</h2>
+
+        <p>
+          Looks like you haven't added anything to your cart yet.
+        </p>
+
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="trendora-shop-button"
+        >
+          Start Shopping →
+        </a>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+
+<style>
+
+.trendora-cart {
+  padding: 80px 6%;
+  background: #fff;
+}
+
+.trendora-cart-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.trendora-cart-header {
+  margin-bottom: 55px;
+}
+
+.trendora-cart-header span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+.trendora-cart-header h1 {
+  font-size: 54px;
+  line-height: 1;
+  margin: 15px 0;
+  font-weight: 800;
+}
+
+.trendora-cart-header p {
+  color: #666;
+  font-size: 17px;
+}
+
+.trendora-cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Cart Item */
+
+.trendora-cart-item {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  gap: 25px;
+  padding: 25px 0;
+  border-top: 1px solid #ddd;
+}
+
+.trendora-cart-image {
+  width: 150px;
+  height: 150px;
+  background: #f4f2ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trendora-cart-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.trendora-cart-details h2 {
+  font-size: 20px;
+  margin: 5px 0 8px;
+}
+
+.trendora-variant {
+  color: #777;
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+.trendora-item-price {
+  font-weight: 600;
+  margin: 0;
+}
+
+.trendora-cart-bottom {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.trendora-quantity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trendora-quantity label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trendora-quantity input {
+  width: 60px;
+  padding: 10px;
+  border: 1px solid #bbb;
+  text-align: center;
+}
+
+.trendora-remove {
+  color: #777;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.trendora-line-price {
+  font-weight: 700;
+  font-size: 18px;
+  padding-top: 8px;
+}
+
+.trendora-update {
+  margin-top: 20px;
+  padding: 13px 25px;
+  background: white;
+  border: 1px solid #222;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Summary */
+
+.trendora-summary {
+  background: #f4f2ee;
+  padding: 35px;
+  position: sticky;
+  top: 30px;
+}
+
+.trendora-summary h2 {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.trendora-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #ccc;
+  font-size: 17px;
+}
+
+.trendora-summary-note {
+  color: #777;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 20px 0;
+}
+
+.trendora-checkout {
+  width: 100%;
+  padding: 17px;
+  border: 0;
+  background: #171717;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trendora-checkout:hover {
+  background: #333;
+}
+
+.trendora-continue {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #222;
+  text-decoration: underline;
+}
+
+/* Empty Cart */
+
+.trendora-empty-cart {
+  text-align: center;
+  padding: 100px 20px;
+  background: #f4f2ee;
+}
+
+.trendora-empty-icon {
+  font-size: 45px;
+}
+
+.trendora-empty-cart h2 {
+  font-size: 35px;
+  margin: 20px 0 10px;
+}
+
+.trendora-empty-cart p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.trendora-shop-button {
+  display: inline-block;
+  padding: 16px 30px;
+  background: #171717;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+  .trendora-cart {
+    padding: 50px 20px;
+  }
+
+  .trendora-cart-header h1 {
+    font-size: 40px;
+  }
+
+  .trendora-cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .trendora-cart-item {
+    grid-template-columns: 100px 1fr;
+  }
+
+  .trendora-cart-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .trendora-line-price {
+    grid-column: 2;
+  }
+
+  .trendora-summary {
+    position: static;
+  }
+
+}
+
+</style>

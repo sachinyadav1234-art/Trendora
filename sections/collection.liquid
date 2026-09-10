@@ -1,0 +1,493 @@
+<section class="trendora-collection">
+
+  <!-- Collection Header -->
+  <div class="trendora-collection__header">
+
+    <div>
+      <p class="trendora-eyebrow">TRENDORA COLLECTION</p>
+
+      <h1>
+        {{ collection.title }}
+      </h1>
+    </div>
+
+    {% if collection.description != blank %}
+      <div class="trendora-collection__description">
+        {{ collection.description }}
+      </div>
+    {% endif %}
+
+  </div>
+
+
+  <!-- Toolbar -->
+  <div class="trendora-collection__toolbar">
+
+    <p>
+      {{ collection.products_count }}
+      {% if collection.products_count == 1 %}
+        product
+      {% else %}
+        products
+      {% endif %}
+    </p>
+
+    <form method="get">
+
+      <label for="SortBy">
+        Sort by
+      </label>
+
+      <select name="sort_by" id="SortBy" onchange="this.form.submit()">
+
+        <option value="manual">
+          Featured
+        </option>
+
+        <option value="price-ascending">
+          Price: Low to High
+        </option>
+
+        <option value="price-descending">
+          Price: High to Low
+        </option>
+
+        <option value="title-ascending">
+          Alphabetically: A-Z
+        </option>
+
+        <option value="title-descending">
+          Alphabetically: Z-A
+        </option>
+
+        <option value="created-descending">
+          Newest
+        </option>
+
+      </select>
+
+    </form>
+
+  </div>
+
+
+  <!-- Products -->
+  {% paginate collection.products by 12 %}
+
+    {% if collection.products.size > 0 %}
+
+      <div class="trendora-collection__grid">
+
+        {% for product in collection.products %}
+
+          <a
+            href="{{ product.url }}"
+            class="trendora-collection-card"
+          >
+
+            <!-- Product Image -->
+            <div class="trendora-collection-card__image">
+
+              {% if product.featured_image %}
+
+                <img
+                  src="{{ product.featured_image | image_url: width: 800 }}"
+                  alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                  loading="lazy"
+                  width="{{ product.featured_image.width }}"
+                  height="{{ product.featured_image.height }}"
+                >
+
+              {% else %}
+
+                <div class="trendora-placeholder">
+                  TRENDORA
+                </div>
+
+              {% endif %}
+
+
+              <!-- Product Badge -->
+              {% if product.available == false %}
+
+                <span class="trendora-badge trendora-badge--sold">
+                  Sold Out
+                </span>
+
+              {% elsif product.compare_at_price > product.price %}
+
+                <span class="trendora-badge">
+                  Sale
+                </span>
+
+              {% endif %}
+
+            </div>
+
+
+            <!-- Product Info -->
+            <div class="trendora-collection-card__info">
+
+              <h2>
+                {{ product.title }}
+              </h2>
+
+              <div class="trendora-collection-card__bottom">
+
+                <span class="trendora-price">
+                  {{ product.price | money }}
+                </span>
+
+                {% if product.available %}
+
+                  <span class="trendora-stock">
+                    Available
+                  </span>
+
+                {% else %}
+
+                  <span class="trendora-sold">
+                    Sold Out
+                  </span>
+
+                {% endif %}
+
+              </div>
+
+            </div>
+
+          </a>
+
+        {% endfor %}
+
+      </div>
+
+
+      <!-- Pagination -->
+      {% if paginate.pages > 1 %}
+
+        <div class="trendora-pagination">
+
+          {{ paginate | default_pagination }}
+
+        </div>
+
+      {% endif %}
+
+
+    {% else %}
+
+      <!-- Empty Collection -->
+      <div class="trendora-empty">
+
+        <p class="trendora-eyebrow">
+          COLLECTION
+        </p>
+
+        <h2>
+          No products found
+        </h2>
+
+        <p>
+          This collection doesn't have any products yet.
+        </p>
+
+        <a href="{{ routes.root_url }}">
+          Continue Shopping →
+        </a>
+
+      </div>
+
+    {% endif %}
+
+  {% endpaginate %}
+
+</section>
+
+
+<style>
+
+/* =========================
+   COLLECTION
+========================= */
+
+.trendora-collection {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 90px 7%;
+}
+
+
+/* Header */
+
+.trendora-collection__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 60px;
+  margin-bottom: 70px;
+}
+
+.trendora-eyebrow {
+  margin: 0 0 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 5px;
+}
+
+.trendora-collection h1 {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 90px);
+  line-height: .95;
+  letter-spacing: -4px;
+}
+
+.trendora-collection__description {
+  max-width: 450px;
+  color: #666;
+  line-height: 1.7;
+}
+
+
+/* Toolbar */
+
+.trendora-collection__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 18px 0;
+  margin-bottom: 35px;
+}
+
+.trendora-collection__toolbar p {
+  margin: 0;
+  color: #666;
+}
+
+.trendora-collection__toolbar form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trendora-collection__toolbar label {
+  font-size: 14px;
+}
+
+.trendora-collection__toolbar select {
+  padding: 10px 35px 10px 12px;
+  border: 1px solid #222;
+  background: white;
+  font-size: 14px;
+}
+
+
+/* Product Grid */
+
+.trendora-collection__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px 28px;
+}
+
+
+/* Product Card */
+
+.trendora-collection-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+.trendora-collection-card__image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #f3f1ed;
+  overflow: hidden;
+}
+
+.trendora-collection-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform .5s ease;
+}
+
+.trendora-collection-card:hover
+.trendora-collection-card__image img {
+  transform: scale(1.05);
+}
+
+
+/* Badge */
+
+.trendora-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 8px 12px;
+  background: #171717;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.trendora-badge--sold {
+  background: white;
+  color: #171717;
+}
+
+
+/* Placeholder */
+
+.trendora-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+
+/* Product Info */
+
+.trendora-collection-card__info {
+  padding-top: 18px;
+}
+
+.trendora-collection-card__info h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.trendora-collection-card__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.trendora-price {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.trendora-stock {
+  color: #16803c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trendora-sold {
+  color: #999;
+  font-size: 13px;
+}
+
+
+/* Pagination */
+
+.trendora-pagination {
+  margin-top: 70px;
+  text-align: center;
+}
+
+.trendora-pagination a,
+.trendora-pagination span {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 9px 13px;
+  color: #111;
+}
+
+
+/* Empty */
+
+.trendora-empty {
+  padding: 100px 30px;
+  text-align: center;
+  background: #f3f1ed;
+}
+
+.trendora-empty h2 {
+  margin: 0 0 15px;
+  font-size: 42px;
+}
+
+.trendora-empty p:not(.trendora-eyebrow) {
+  color: #666;
+}
+
+.trendora-empty a {
+  display: inline-block;
+  margin-top: 20px;
+  color: #111;
+  font-weight: 600;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+  .trendora-collection {
+    padding: 70px 5%;
+  }
+
+  .trendora-collection__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trendora-collection__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .trendora-collection {
+    padding: 50px 20px;
+  }
+
+  .trendora-collection h1 {
+    letter-spacing: -2px;
+  }
+
+  .trendora-collection__header {
+    margin-bottom: 45px;
+  }
+
+  .trendora-collection__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .trendora-collection__toolbar form {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .trendora-collection__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+}
+
+</style>
