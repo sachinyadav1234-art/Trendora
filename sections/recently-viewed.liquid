@@ -1,0 +1,103 @@
+{% comment %}
+  Recently Viewed Products Section
+{% endcomment %}
+
+<div class="trendora-recently-viewed" id="trendoraRecentlyViewedSection" style="display: none;">
+  <div class="trendora-recently-viewed__inner">
+    <h2 class="trendora-recently-viewed__title">{{ section.settings.title | default: "Recently Viewed Products" }}</h2>
+    <div class="trendora-recently-viewed__grid" id="trendoraRecentlyViewedGrid">
+      <!-- Dynamic Products Inserted via JS -->
+    </div>
+  </div>
+</div>
+
+<style>
+.trendora-recently-viewed {
+  padding: 60px 5%;
+  background: var(--surface-bg, #fafafa);
+  border-top: 1px solid var(--border-color, #eee);
+}
+
+.trendora-recently-viewed__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.trendora-recently-viewed__title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.trendora-recently-viewed__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  {% if product %}
+    // Record current product handle
+    let recentlyViewed = JSON.parse(localStorage.getItem('trendora_recently_viewed')) || [];
+    const currentHandle = {{ product.handle | json }};
+    recentlyViewed = recentlyViewed.filter(h => h !== currentHandle);
+    recentlyViewed.unshift(currentHandle);
+    if (recentlyViewed.length > 8) recentlyViewed.pop();
+    localStorage.setItem('trendora_recently_viewed', JSON.stringify(recentlyViewed));
+  {% endif %}
+
+  // Render recently viewed products
+  const section = document.getElementById('trendoraRecentlyViewedSection');
+  const grid = document.getElementById('trendoraRecentlyViewedGrid');
+  const list = JSON.parse(localStorage.getItem('trendora_recently_viewed')) || [];
+
+  {% if product %}
+    // Filter out current product when on PDP
+    const handlesToFetch = list.filter(h => h !== {{ product.handle | json }}).slice(0, 4);
+  {% else %}
+    const handlesToFetch = list.slice(0, 4);
+  {% endif %}
+
+  if (handlesToFetch.length > 0 && section && grid) {
+    section.style.display = 'block';
+    handlesToFetch.forEach(handle => {
+      fetch(`/products/${handle}.js`)
+        .then(res => res.json())
+        .then(prod => {
+          const card = document.createElement('div');
+          card.className = 'trendora-product-card';
+          card.innerHTML = `
+            <a href="${prod.url}">
+              <img src="${prod.featured_image}" alt="${prod.title}">
+              <h3>${prod.title}</h3>
+              <p>$${(prod.price / 100).toFixed(2)}</p>
+            </a>`;
+          grid.appendChild(card);
+        })
+        .catch(() => {});
+    });
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Recently Viewed Products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed Products"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,219 @@
+{% comment %}
+  Flash Sale Countdown Timer Section
+{% endcomment %}
+
+<div class="trendora-countdown-section">
+  <div class="trendora-countdown-inner">
+    <div class="trendora-countdown-content">
+      <span class="trendora-countdown-badge">{{ section.settings.badge_text | default: "LIMITED TIME OFFER" }}</span>
+      <h2 class="trendora-countdown-heading">{{ section.settings.heading | default: "Flash Sale - Up to 50% Off" }}</h2>
+      <p class="trendora-countdown-subheading">{{ section.settings.subheading | default: "Hurry! Offer ends soon. Don't miss out on your favorite items." }}</p>
+
+      <div class="trendora-countdown-clock" id="trendoraCountdownClock" data-end-date="{{ section.settings.end_date | default: '2026-12-31T23:59:59' }}">
+        <div class="trendora-clock-box">
+          <span class="trendora-clock-val" id="clockDays">00</span>
+          <span class="trendora-clock-lbl">Days</span>
+        </div>
+        <div class="trendora-clock-separator">:</div>
+        <div class="trendora-clock-box">
+          <span class="trendora-clock-val" id="clockHours">00</span>
+          <span class="trendora-clock-lbl">Hours</span>
+        </div>
+        <div class="trendora-clock-separator">:</div>
+        <div class="trendora-clock-box">
+          <span class="trendora-clock-val" id="clockMins">00</span>
+          <span class="trendora-clock-lbl">Mins</span>
+        </div>
+        <div class="trendora-clock-separator">:</div>
+        <div class="trendora-clock-box">
+          <span class="trendora-clock-val" id="clockSecs">00</span>
+          <span class="trendora-clock-lbl">Secs</span>
+        </div>
+      </div>
+
+      {% if section.settings.btn_link != blank %}
+        <a href="{{ section.settings.btn_link }}" class="trendora-btn trendora-btn--countdown">
+          {{ section.settings.btn_text | default: "Shop Flash Sale" }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+.trendora-countdown-section {
+  background: linear-gradient(135deg, #171717 0%, #2c2c2c 100%);
+  color: #ffffff;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.trendora-countdown-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.trendora-countdown-badge {
+  display: inline-block;
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.trendora-countdown-heading {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+
+}
+
+.trendora-countdown-subheading {
+  font-size: 15px;
+  color: #ccc;
+  margin-bottom: 30px;
+}
+
+.trendora-countdown-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.trendora-clock-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 18px;
+  min-width: 70px;
+
+}
+
+.trendora-clock-val {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+.trendora-clock-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #aaa;
+}
+
+.trendora-clock-separator {
+  font-size: 24px;
+  font-weight: 700;
+  color: #888;
+}
+
+.trendora-btn--countdown {
+  display: inline-block;
+  width: auto;
+  padding: 14px 36px;
+  background: #ffffff;
+  color: #171717;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.trendora-btn--countdown:hover {
+  transform: translateY(-2px);
+  background: #f0f0f0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const clock = document.getElementById('trendoraCountdownClock');
+  if (!clock) return;
+
+  const targetDate = new Date(clock.dataset.endDate || '2026-12-31T23:59:59').getTime();
+
+  function updateClock() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      document.getElementById('clockDays').textContent = '00';
+      document.getElementById('clockHours').textContent = '00';
+      document.getElementById('clockMins').textContent = '00';
+      document.getElementById('clockSecs').textContent = '00';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('clockDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('clockHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('clockMins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('clockSecs').textContent = String(secs).padStart(2, '0');
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Countdown Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "LIMITED TIME OFFER"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Flash Sale - Up to 50% Off"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Hurry! Offer ends soon. Don't miss out on your favorite items."
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Countdown Target Date (YYYY-MM-THH:mm:ss)",
+      "default": "2026-12-31T23:59:59"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Shop Flash Sale"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown Banner"
+    }
+  ]
+}
+{% endschema %}

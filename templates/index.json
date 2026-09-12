@@ -1,7 +1,11 @@
 {
   "sections": {
     "hero": {
-      "type": "hello-world",
+      "type": "hero",
+      "settings": {}
+    },
+    "countdown_timer": {
+      "type": "countdown-timer",
       "settings": {}
     },
     "featured_products": {
@@ -16,6 +20,14 @@
       "type": "promo-banner",
       "settings": {}
     },
+    "instagram_feed": {
+      "type": "instagram-feed",
+      "settings": {}
+    },
+    "recently_viewed": {
+      "type": "recently-viewed",
+      "settings": {}
+    },
     "newsletter": {
       "type": "newsletter",
       "settings": {}
@@ -23,9 +35,12 @@
   },
   "order": [
     "hero",
+    "countdown_timer",
     "featured_products",
     "shop_by_category",
     "promo_banner",
+    "instagram_feed",
+    "recently_viewed",
     "newsletter"
   ]
 }

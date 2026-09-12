@@ -1,14 +1,16 @@
-<section class="trendora-newsletter">
-  <div class="trendora-newsletter__content">
+<section class="trendora-newsletter" style="background-color: {{ section.settings.bg_color | default: '#f3f1ed' }};">
+  <div class="trendora-newsletter__content page-width">
 
     <p class="trendora-newsletter__eyebrow">
-      STAY IN THE LOOP
+      {{ section.settings.eyebrow | default: "STAY IN THE LOOP" }}
     </p>
 
-    <h2>Get the latest from Trendora.</h2>
+    <h2>
+      {{ section.settings.heading | default: "Get the latest from Trendora." }}
+    </h2>
 
     <p class="trendora-newsletter__text">
-      Sign up for new arrivals, exclusive offers and style updates.
+      {{ section.settings.text | default: "Sign up for new arrivals, exclusive offers and style updates." }}
     </p>
 
     {% form 'customer', class: 'trendora-newsletter__form' %}
@@ -16,8 +18,10 @@
       <input type="hidden" name="contact[tags]" value="newsletter">
 
       <div class="trendora-newsletter__input-row">
+        <label for="NewsletterEmail" class="visually-hidden">Email address</label>
 
         <input
+          id="NewsletterEmail"
           type="email"
           name="contact[email]"
           class="trendora-newsletter__input"
@@ -25,22 +29,23 @@
           placeholder="Enter your email address"
           autocomplete="email"
           required
+          aria-required="true"
         >
 
-        <button type="submit" class="trendora-newsletter__button">
+        <button type="submit" class="trendora-newsletter__button" aria-label="Subscribe to Newsletter">
           Subscribe →
         </button>
 
       </div>
 
       {% if form.posted_successfully? %}
-        <p class="trendora-newsletter__success">
+        <p class="trendora-newsletter__success" role="status">
           Thanks for subscribing to Trendora! 🎉
         </p>
       {% endif %}
 
       {% if form.errors %}
-        <div class="trendora-newsletter__error">
+        <div class="trendora-newsletter__error" role="alert">
           {{ form.errors | default_errors }}
         </div>
       {% endif %}
@@ -50,112 +55,144 @@
   </div>
 </section>
 
-
 <style>
+.trendora-newsletter {
+  padding: 90px 0;
+  text-align: center;
+}
+
+.trendora-newsletter__content {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.trendora-newsletter__eyebrow {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #171717;
+}
+
+.trendora-newsletter h2 {
+  margin: 0 0 18px;
+  font-size: clamp(32px, 4.5vw, 48px);
+  line-height: 1.1;
+  font-weight: 800;
+  color: #171717;
+}
+
+.trendora-newsletter__text {
+  margin: 0 auto 35px;
+  max-width: 520px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #555555;
+}
+
+.trendora-newsletter__input-row {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.trendora-newsletter__input {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px;
+  border: 1px solid #171717;
+  border-right: none;
+  background: #ffffff;
+  font-size: 15px;
+  outline: none;
+  border-radius: 2px 0 0 2px;
+}
+
+.trendora-newsletter__button {
+  padding: 16px 32px;
+  border: 1px solid #171717;
+  background: #171717;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 0 2px 2px 0;
+  transition: background-color 0.25s ease;
+}
+
+.trendora-newsletter__button:hover {
+  background: #333333;
+}
+
+.trendora-newsletter__success {
+  margin-top: 20px;
+  font-weight: 700;
+  color: #287a43;
+}
+
+.trendora-newsletter__error {
+  margin-top: 20px;
+  color: #c2382c;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
   .trendora-newsletter {
-    padding: 100px 7%;
-    background: #f3f1ed;
-    text-align: center;
-  }
-
-  .trendora-newsletter__content {
-    max-width: 750px;
-    margin: 0 auto;
-  }
-
-  .trendora-newsletter__eyebrow {
-    margin: 0 0 18px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 4px;
-  }
-
-  .trendora-newsletter h2 {
-    margin: 0 0 20px;
-    font-size: 48px;
-    line-height: 1.1;
-    color: #222;
-  }
-
-  .trendora-newsletter__text {
-    margin: 0 auto 35px;
-    max-width: 500px;
-    font-size: 17px;
-    line-height: 1.6;
-    color: #555;
+    padding: 60px 0;
   }
 
   .trendora-newsletter__input-row {
-    display: flex;
-    max-width: 650px;
-    margin: 0 auto;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .trendora-newsletter__input {
-    flex: 1;
-    min-width: 0;
-    padding: 17px 20px;
-    border: 1px solid #222;
-    border-right: none;
-    background: #fff;
-    font-size: 15px;
-    outline: none;
+    width: 100%;
+    border-right: 1px solid #171717;
+    border-radius: 2px;
   }
 
   .trendora-newsletter__button {
-    padding: 17px 28px;
-    border: 1px solid #222;
-    background: #222;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
+    width: 100%;
+    border-radius: 2px;
   }
-
-  .trendora-newsletter__button:hover {
-    opacity: 0.85;
-  }
-
-  .trendora-newsletter__success {
-    margin-top: 20px;
-    font-weight: 600;
-  }
-
-  .trendora-newsletter__error {
-    margin-top: 20px;
-    color: #b42318;
-  }
-
-  @media (max-width: 600px) {
-    .trendora-newsletter {
-      padding: 70px 5%;
-    }
-
-    .trendora-newsletter h2 {
-      font-size: 36px;
-    }
-
-    .trendora-newsletter__input-row {
-      display: block;
-    }
-
-    .trendora-newsletter__input {
-      width: 100%;
-      border-right: 1px solid #222;
-      box-sizing: border-box;
-    }
-
-    .trendora-newsletter__button {
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
+}
 </style>
-
 
 {% schema %}
 {
   "name": "Newsletter",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "STAY IN THE LOOP"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Get the latest from Trendora."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Subheading",
+      "default": "Sign up for new arrivals, exclusive offers and style updates."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3f1ed"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
 }
 {% endschema %}

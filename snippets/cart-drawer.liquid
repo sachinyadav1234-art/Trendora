@@ -1,0 +1,409 @@
+<div class="trendora-drawer-overlay" id="trendoraDrawerOverlay" onclick="trendoraCloseCartDrawer()"></div>
+
+<div class="trendora-cart-drawer" id="trendoraCartDrawer" aria-hidden="true" role="dialog" aria-label="Shopping Cart Drawer">
+  <!-- Drawer Header -->
+  <div class="trendora-cart-drawer__header">
+    <h3 class="trendora-cart-drawer__title">
+      Your Cart (<span id="trendoraDrawerCount">{{ cart.item_count }}</span>)
+    </h3>
+    <button type="button" class="trendora-cart-drawer__close" onclick="trendoraCloseCartDrawer()" aria-label="Close cart drawer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Free Shipping Progress Bar -->
+  <div class="trendora-shipping-bar" id="trendoraShippingBarContainer">
+    {% assign free_shipping_threshold = 10000 %}{% comment %} Threshold in cents ($100.00) {% endcomment %}
+    {% assign current_subtotal = cart.total_price %}
+    {% if current_subtotal >= free_shipping_threshold %}
+      <p class="trendora-shipping-bar__message trendora-shipping-bar__message--unlocked">
+        🎉 Congratulations! You unlocked <strong>Free Complimentary Shipping</strong>!
+      </p>
+      <div class="trendora-shipping-bar__track">
+        <div class="trendora-shipping-bar__progress" style="width: 100%;"></div>
+      </div>
+    {% else %}
+      {% assign remaining = free_shipping_threshold | minus: current_subtotal %}
+      <p class="trendora-shipping-bar__message">
+        Add <strong>{{ remaining | money }}</strong> more to enjoy <strong>Free Shipping</strong>!
+      </p>
+      {% assign percentage = current_subtotal | times: 100 | divided_by: free_shipping_threshold %}
+      <div class="trendora-shipping-bar__track">
+        <div class="trendora-shipping-bar__progress" style="width: {{ percentage }}%;"></div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Drawer Body / Cart Items -->
+  <div class="trendora-cart-drawer__body" id="trendoraDrawerBody">
+    {% if cart.item_count == 0 %}
+      <div class="trendora-cart-drawer__empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <p>Your shopping cart is empty.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="trendora-btn trendora-btn--primary">Start Shopping</a>
+      </div>
+    {% else %}
+      <div class="trendora-drawer-items" id="trendoraDrawerItems">
+        {% for item in cart.items %}
+          <div class="trendora-drawer-item" data-key="{{ item.key }}">
+            <a href="{{ item.url }}" class="trendora-drawer-item__image">
+              {% if item.image %}
+                <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}" loading="lazy">
+              {% else %}
+                <div class="trendora-drawer-item__placeholder"></div>
+              {% endif %}
+            </a>
+
+            <div class="trendora-drawer-item__details">
+              <a href="{{ item.url }}" class="trendora-drawer-item__title">{{ item.product.title }}</a>
+              {% unless item.product.has_only_default_variant %}
+                <p class="trendora-drawer-item__variant">{{ item.variant.title }}</p>
+              {% endunless %}
+              <div class="trendora-drawer-item__price">
+                {{ item.final_line_price | money }}
+              </div>
+
+              <div class="trendora-drawer-item__actions">
+                <div class="trendora-qty-selector">
+                  <button type="button" class="trendora-qty-btn" onclick="trendoraUpdateCartItem('{{ item.key }}', {{ item.quantity | minus: 1 }})" aria-label="Decrease quantity">-</button>
+                  <span class="trendora-qty-val">{{ item.quantity }}</span>
+                  <button type="button" class="trendora-qty-btn" onclick="trendoraUpdateCartItem('{{ item.key }}', {{ item.quantity | plus: 1 }})" aria-label="Increase quantity">+</button>
+                </div>
+
+                <button type="button" class="trendora-drawer-item__remove" onclick="trendoraUpdateCartItem('{{ item.key }}', 0)" aria-label="Remove item">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Cart Note & Footer -->
+  <div class="trendora-cart-drawer__footer" id="trendoraDrawerFooter"{% if cart.item_count == 0 %} style="display:none;"{% endif %}>
+    <details class="trendora-drawer-note">
+      <summary>Add Special Instructions / Order Note</summary>
+      <textarea id="trendoraDrawerCartNote" onchange="trendoraSaveCartNote(this.value)" placeholder="Special instructions for seller...">{{ cart.note }}</textarea>
+    </details>
+
+    <div class="trendora-drawer-subtotal">
+      <span>Subtotal</span>
+      <span id="trendoraDrawerSubtotalPrice"><strong>{{ cart.total_price | money }}</strong></span>
+    </div>
+    <p class="trendora-drawer-taxes-notice">Taxes and shipping calculated at checkout.</p>
+
+    <div class="trendora-drawer-buttons">
+      <form action="{{ routes.cart_url }}" method="post">
+        <button type="submit" name="checkout" class="trendora-btn trendora-btn--checkout">
+          Proceed to Checkout
+        </button>
+      </form>
+      <a href="{{ routes.cart_url }}" class="trendora-drawer-view-cart">View Full Cart</a>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Cart Drawer Overlay */
+.trendora-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.trendora-drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cart Drawer Panel */
+.trendora-cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trendora-cart-drawer.active {
+  transform: translateX(0);
+}
+
+.trendora-cart-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+}
+
+.trendora-cart-drawer__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.trendora-cart-drawer__close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: currentColor;
+  display: flex;
+  align-items: center;
+}
+
+/* Shipping Progress Bar */
+.trendora-shipping-bar {
+  padding: 14px 24px;
+  background: var(--surface-bg, #f9f9f9);
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+}
+
+.trendora-shipping-bar__message {
+  font-size: 12px;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.trendora-shipping-bar__track {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.trendora-shipping-bar__progress {
+  height: 100%;
+  background: #171717;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* Drawer Body */
+.trendora-cart-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+.trendora-cart-drawer__empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.trendora-cart-drawer__empty svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.trendora-cart-drawer__empty p {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.trendora-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #171717;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.trendora-btn:hover {
+  background: #333333;
+}
+
+/* Drawer Items */
+.trendora-drawer-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.trendora-drawer-item {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.trendora-drawer-item__image {
+  width: 75px;
+  height: 90px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+
+.trendora-drawer-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trendora-drawer-item__details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trendora-drawer-item__title {
+  color: currentColor;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.trendora-drawer-item__variant {
+  font-size: 12px;
+  color: #777;
+  margin: 0 0 6px 0;
+}
+
+.trendora-drawer-item__price {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.trendora-drawer-item__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.trendora-qty-selector {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.trendora-qty-btn {
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: currentColor;
+}
+
+.trendora-qty-val {
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trendora-drawer-item__remove {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.trendora-drawer-item__remove:hover {
+  color: #e53935;
+}
+
+/* Footer */
+.trendora-cart-drawer__footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-color, #e5e5e5);
+  background: var(--surface-bg, #fafafa);
+}
+
+.trendora-drawer-note {
+  margin-bottom: 16px;
+}
+
+.trendora-drawer-note summary {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+}
+
+.trendora-drawer-note textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  height: 60px;
+}
+
+.trendora-drawer-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.trendora-drawer-taxes-notice {
+  font-size: 11px;
+  color: #777;
+  margin: 0 0 16px 0;
+}
+
+.trendora-btn--checkout {
+  font-size: 15px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.trendora-drawer-view-cart {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: currentColor;
+  text-decoration: underline;
+}
+</style>

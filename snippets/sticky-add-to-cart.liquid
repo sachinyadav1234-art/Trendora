@@ -1,0 +1,126 @@
+{% comment %}
+  Sticky Add to Cart Bar Snippet for Product Page
+  Usage: {% render 'sticky-add-to-cart', product: product %}
+{% endcomment %}
+
+<div class="trendora-sticky-cart" id="trendoraStickyCart">
+  <div class="trendora-sticky-cart__inner">
+    <div class="trendora-sticky-cart__product">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | image_url: width: 100 }}" alt="{{ product.title | escape }}">
+      {% endif %}
+      <div class="trendora-sticky-cart__info">
+        <span class="trendora-sticky-cart__title">{{ product.title }}</span>
+        <span class="trendora-sticky-cart__price">{{ product.selected_or_first_available_variant.price | money }}</span>
+      </div>
+    </div>
+
+    <div class="trendora-sticky-cart__actions">
+      {% unless product.has_only_default_variant %}
+        <select id="trendoraStickyVariantSelect" class="trendora-sticky-cart__select" onchange="trendoraUpdateStickyVariant(this.value)">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endunless %}
+
+      <button type="button" class="trendora-btn trendora-btn--sticky-add" onclick="trendoraAddToCart(document.getElementById('trendoraStickyVariantSelect') ? document.getElementById('trendoraStickyVariantSelect').value : {{ product.selected_or_first_available_variant.id }})" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+        {% if product.selected_or_first_available_variant.available %}Add to Cart{% else %}Sold Out{% endif %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+.trendora-sticky-cart {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bg-color, #ffffff);
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.08);
+  z-index: 990;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 12px 20px;
+}
+
+.trendora-sticky-cart.visible {
+  transform: translateY(0);
+}
+
+.trendora-sticky-cart__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.trendora-sticky-cart__product {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.trendora-sticky-cart__product img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.trendora-sticky-cart__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.trendora-sticky-cart__title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trendora-sticky-cart__price {
+  font-size: 13px;
+  color: #666;
+}
+
+.trendora-sticky-cart__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trendora-sticky-cart__select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--bg-color, #fff);
+  color: var(--text-color, #171717);
+}
+
+.trendora-btn--sticky-add {
+  padding: 10px 24px;
+  width: auto;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .trendora-sticky-cart__product {
+    display: none;
+  }
+  .trendora-sticky-cart__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .trendora-btn--sticky-add {
+    flex: 1;
+  }
+}
+</style>

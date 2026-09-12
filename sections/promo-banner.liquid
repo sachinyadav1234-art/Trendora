@@ -1,83 +1,153 @@
-<section class="trendora-promo">
-  <div class="trendora-promo__content">
-    <p class="trendora-promo__eyebrow">TRENDORA EXCLUSIVE</p>
+<section class="trendora-promo-wrapper page-width">
+  <div class="trendora-promo" style="background-color: {{ section.settings.bg_color | default: '#1f1f1f' }}; color: {{ section.settings.text_color | default: '#ffffff' }};">
+    <div class="trendora-promo__content">
+      <p class="trendora-promo__eyebrow">
+        {{ section.settings.eyebrow | default: "TRENDORA EXCLUSIVE" }}
+      </p>
 
-    <h2>Upgrade Your<br>Everyday Style.</h2>
+      <h2>
+        {{ section.settings.heading | default: "Upgrade Your Everyday Style." }}
+      </h2>
 
-    <p class="trendora-promo__description">
-      Discover premium styles made for modern everyday living.
-      Simple. Bold. Trendora.
-    </p>
+      <p class="trendora-promo__description">
+        {{ section.settings.text | default: "Discover premium styles made for modern everyday living. Simple. Bold. Trendora." }}
+      </p>
 
-    <a href="/collections/all" class="trendora-promo__button">
-      Explore Collection →
-    </a>
+      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="trendora-promo__button">
+        {{ section.settings.button_text | default: "Explore Collection →" }}
+      </a>
+    </div>
   </div>
 </section>
 
 <style>
+.trendora-promo-wrapper {
+  padding: 40px 0;
+}
+
+.trendora-promo {
+  padding: 80px 8%;
+  background: #1f1f1f;
+  color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.trendora-promo__content {
+  max-width: 650px;
+}
+
+.trendora-promo__eyebrow {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.trendora-promo h2 {
+  margin: 0 0 20px;
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.trendora-promo__description {
+  max-width: 520px;
+  margin: 0 0 32px;
+  font-size: 17px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.trendora-promo__button {
+  display: inline-block;
+  padding: 16px 32px;
+  background: #ffffff;
+  color: #171717;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+  border-radius: 2px;
+}
+
+.trendora-promo__button:hover {
+  transform: translateY(-2px);
+  background: #f0f0f0;
+}
+
+@media (max-width: 600px) {
+  .trendora-promo-wrapper {
+    padding: 20px 0;
+  }
+
   .trendora-promo {
-    margin: 40px 7%;
-    padding: 90px 8%;
-    background: #1f1f1f;
-    color: #ffffff;
-  }
-
-  .trendora-promo__content {
-    max-width: 650px;
-  }
-
-  .trendora-promo__eyebrow {
-    margin: 0 0 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 4px;
+    padding: 50px 24px;
   }
 
   .trendora-promo h2 {
-    margin: 0 0 25px;
-    font-size: 58px;
-    line-height: 1.05;
-    font-weight: 700;
-  }
-
-  .trendora-promo__description {
-    max-width: 500px;
-    margin: 0 0 35px;
-    font-size: 17px;
-    line-height: 1.7;
-    color: #dddddd;
+    font-size: 34px;
   }
 
   .trendora-promo__button {
-    display: inline-block;
-    padding: 15px 25px;
-    background: #ffffff;
-    color: #111111;
-    text-decoration: none;
-    font-weight: 700;
-    transition: 0.3s ease;
+    width: 100%;
+    text-align: center;
   }
-
-  .trendora-promo__button:hover {
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 600px) {
-    .trendora-promo {
-      margin: 20px 5%;
-      padding: 60px 8%;
-    }
-
-    .trendora-promo h2 {
-      font-size: 40px;
-    }
-  }
+}
 </style>
 
 {% schema %}
 {
   "name": "Promo Banner",
-  "settings": []
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "TRENDORA EXCLUSIVE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Upgrade Your Everyday Style."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Banner Description",
+      "default": "Discover premium styles made for modern everyday living. Simple. Bold. Trendora."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Explore Collection →"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banner"
+    }
+  ]
 }
 {% endschema %}

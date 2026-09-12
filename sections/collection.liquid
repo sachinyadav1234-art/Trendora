@@ -1,13 +1,11 @@
-<section class="trendora-collection">
+<section class="trendora-collection page-width">
 
   <!-- Collection Header -->
   <div class="trendora-collection__header">
-
     <div>
       <p class="trendora-eyebrow">TRENDORA COLLECTION</p>
-
       <h1>
-        {{ collection.title }}
+        {{ collection.title | default: "All Products" }}
       </h1>
     </div>
 
@@ -16,186 +14,101 @@
         {{ collection.description }}
       </div>
     {% endif %}
-
   </div>
-
 
   <!-- Toolbar -->
   <div class="trendora-collection__toolbar">
-
-    <p>
-      {{ collection.products_count }}
-      {% if collection.products_count == 1 %}
-        product
-      {% else %}
-        products
-      {% endif %}
+    <p class="trendora-collection__count">
+      Showing {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
     </p>
 
-    <form method="get">
-
-      <label for="SortBy">
-        Sort by
-      </label>
-
-      <select name="sort_by" id="SortBy" onchange="this.form.submit()">
-
-        <option value="manual">
-          Featured
-        </option>
-
-        <option value="price-ascending">
-          Price: Low to High
-        </option>
-
-        <option value="price-descending">
-          Price: High to Low
-        </option>
-
-        <option value="title-ascending">
-          Alphabetically: A-Z
-        </option>
-
-        <option value="title-descending">
-          Alphabetically: Z-A
-        </option>
-
-        <option value="created-descending">
-          Newest
-        </option>
-
+    <form method="get" action="{{ collection.url }}" class="trendora-sort-form">
+      <label for="SortBy">Sort by:</label>
+      {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+      <select name="sort_by" id="SortBy" onchange="this.form.submit()" aria-label="Sort products">
+        <option value="manual" {% if current_sort == 'manual' %}selected{% endif %}>Featured</option>
+        <option value="best-selling" {% if current_sort == 'best-selling' %}selected{% endif %}>Best Selling</option>
+        <option value="title-ascending" {% if current_sort == 'title-ascending' %}selected{% endif %}>Alphabetically, A-Z</option>
+        <option value="title-descending" {% if current_sort == 'title-descending' %}selected{% endif %}>Alphabetically, Z-A</option>
+        <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>Price, Low to High</option>
+        <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>Price, High to Low</option>
+        <option value="created-descending" {% if current_sort == 'created-descending' %}selected{% endif %}>Date, New to Old</option>
       </select>
-
     </form>
-
   </div>
 
-
-  <!-- Products -->
-  {% paginate collection.products by 12 %}
+  <!-- Products Grid -->
+  {% paginate collection.products by section.settings.products_per_page | default: 12 %}
 
     {% if collection.products.size > 0 %}
 
       <div class="trendora-collection__grid">
-
         {% for product in collection.products %}
-
-          <a
-            href="{{ product.url }}"
-            class="trendora-collection-card"
-          >
-
-            <!-- Product Image -->
-            <div class="trendora-collection-card__image">
-
+          <article class="trendora-collection-card">
+            <a href="{{ product.url }}" class="trendora-collection-card__image">
               {% if product.featured_image %}
-
                 <img
                   src="{{ product.featured_image | image_url: width: 800 }}"
                   alt="{{ product.featured_image.alt | default: product.title | escape }}"
                   loading="lazy"
-                  width="{{ product.featured_image.width }}"
-                  height="{{ product.featured_image.height }}"
+                  width="800"
+                  height="1000"
                 >
-
               {% else %}
-
                 <div class="trendora-placeholder">
-                  TRENDORA
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                 </div>
-
               {% endif %}
 
-
-              <!-- Product Badge -->
+              <!-- Badges -->
               {% if product.available == false %}
-
-                <span class="trendora-badge trendora-badge--sold">
-                  Sold Out
-                </span>
-
+                <span class="trendora-badge trendora-badge--sold">Sold Out</span>
               {% elsif product.compare_at_price > product.price %}
-
-                <span class="trendora-badge">
-                  Sale
-                </span>
-
+                <span class="trendora-badge trendora-badge--sale">Sale</span>
               {% endif %}
+            </a>
 
-            </div>
-
-
-            <!-- Product Info -->
             <div class="trendora-collection-card__info">
-
               <h2>
-                {{ product.title }}
+                <a href="{{ product.url }}">{{ product.title }}</a>
               </h2>
 
               <div class="trendora-collection-card__bottom">
-
-                <span class="trendora-price">
-                  {{ product.price | money }}
-                </span>
+                <div class="trendora-price-wrap">
+                  <span class="trendora-price">{{ product.price | money }}</span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="trendora-compare-price">{{ product.compare_at_price | money }}</span>
+                  {% endif %}
+                </div>
 
                 {% if product.available %}
-
-                  <span class="trendora-stock">
-                    Available
-                  </span>
-
+                  <span class="trendora-stock">In Stock</span>
                 {% else %}
-
-                  <span class="trendora-sold">
-                    Sold Out
-                  </span>
-
+                  <span class="trendora-sold">Sold Out</span>
                 {% endif %}
-
               </div>
-
             </div>
-
-          </a>
-
+          </article>
         {% endfor %}
-
       </div>
-
 
       <!-- Pagination -->
       {% if paginate.pages > 1 %}
-
-        <div class="trendora-pagination">
-
+        <nav class="trendora-pagination" aria-label="Collection Pagination">
           {{ paginate | default_pagination }}
-
-        </div>
-
+        </nav>
       {% endif %}
-
 
     {% else %}
 
       <!-- Empty Collection -->
       <div class="trendora-empty">
-
-        <p class="trendora-eyebrow">
-          COLLECTION
-        </p>
-
-        <h2>
-          No products found
-        </h2>
-
-        <p>
-          This collection doesn't have any products yet.
-        </p>
-
-        <a href="{{ routes.root_url }}">
-          Continue Shopping →
+        <p class="trendora-eyebrow">COLLECTION EMPTY</p>
+        <h2>No products found</h2>
+        <p>There are currently no products available in this collection.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="trendora-btn trendora-btn--primary">
+          Explore All Products →
         </a>
-
       </div>
 
     {% endif %}
@@ -204,96 +117,86 @@
 
 </section>
 
-
 <style>
-
-/* =========================
-   COLLECTION
-========================= */
-
 .trendora-collection {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 90px 7%;
+  padding: 60px 0 100px;
 }
-
-
-/* Header */
 
 .trendora-collection__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 60px;
-  margin-bottom: 70px;
+  gap: 40px;
+  margin-bottom: 50px;
 }
 
 .trendora-eyebrow {
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 5px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: #171717;
 }
 
 .trendora-collection h1 {
   margin: 0;
-  font-size: clamp(48px, 7vw, 90px);
-  line-height: .95;
-  letter-spacing: -4px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -2px;
+  font-weight: 800;
 }
 
 .trendora-collection__description {
   max-width: 450px;
-  color: #666;
-  line-height: 1.7;
+  color: #555555;
+  line-height: 1.6;
+  font-size: 16px;
 }
-
-
-/* Toolbar */
 
 .trendora-collection__toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 18px 0;
-  margin-bottom: 35px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 0;
+  margin-bottom: 40px;
 }
 
-.trendora-collection__toolbar p {
+.trendora-collection__count {
   margin: 0;
-  color: #666;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.trendora-collection__toolbar form {
+.trendora-sort-form {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-.trendora-collection__toolbar label {
+.trendora-sort-form label {
   font-size: 14px;
+  font-weight: 600;
+  color: #171717;
 }
 
-.trendora-collection__toolbar select {
-  padding: 10px 35px 10px 12px;
-  border: 1px solid #222;
+.trendora-sort-form select {
+  padding: 8px 14px;
+  border: 1px solid #171717;
   background: white;
   font-size: 14px;
+  border-radius: 2px;
+  outline: none;
 }
-
-
-/* Product Grid */
 
 .trendora-collection__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 50px 28px;
+  gap: 40px 28px;
 }
-
-
-/* Product Card */
 
 .trendora-collection-card {
   color: inherit;
@@ -302,192 +205,182 @@
 
 .trendora-collection-card__image {
   position: relative;
-  aspect-ratio: 1 / 1;
+  display: block;
+  aspect-ratio: 3 / 4;
   background: #f3f1ed;
   overflow: hidden;
+  border-radius: 2px;
 }
 
 .trendora-collection-card__image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
-  transition: transform .5s ease;
+  transition: transform 0.5s ease;
 }
 
-.trendora-collection-card:hover
-.trendora-collection-card__image img {
+.trendora-collection-card:hover .trendora-collection-card__image img {
   transform: scale(1.05);
 }
 
-
-/* Badge */
-
 .trendora-badge {
   position: absolute;
-  top: 18px;
-  left: 18px;
-  padding: 8px 12px;
-  background: #171717;
-  color: white;
-  font-size: 11px;
+  top: 14px;
+  left: 14px;
+  padding: 6px 12px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
+.trendora-badge--sale {
+  background: #171717;
+  color: #ffffff;
+}
+
 .trendora-badge--sold {
-  background: white;
+  background: #ffffff;
   color: #171717;
+  border: 1px solid #171717;
 }
-
-
-/* Placeholder */
-
-.trendora-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: 700;
-}
-
-
-/* Product Info */
 
 .trendora-collection-card__info {
-  padding-top: 18px;
+  padding-top: 16px;
 }
 
 .trendora-collection-card__info h2 {
-  margin: 0 0 14px;
-  font-size: 20px;
-  line-height: 1.3;
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.trendora-collection-card__info h2 a {
+  color: #171717;
+  text-decoration: none;
 }
 
 .trendora-collection-card__bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+}
+
+.trendora-price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .trendora-price {
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.trendora-compare-price {
+  font-size: 14px;
+  color: #888888;
+  text-decoration: line-through;
 }
 
 .trendora-stock {
-  color: #16803c;
-  font-size: 13px;
-  font-weight: 600;
+  color: #287a43;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .trendora-sold {
-  color: #999;
-  font-size: 13px;
+  color: #888888;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-
-/* Pagination */
-
 .trendora-pagination {
-  margin-top: 70px;
+  margin-top: 60px;
   text-align: center;
 }
 
 .trendora-pagination a,
 .trendora-pagination span {
   display: inline-block;
-  margin: 0 5px;
-  padding: 9px 13px;
-  color: #111;
+  margin: 0 4px;
+  padding: 10px 16px;
+  color: #171717;
+  border: 1px solid #e0e0e0;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-
-/* Empty */
+.trendora-pagination .current {
+  background: #171717;
+  color: #ffffff;
+  border-color: #171717;
+}
 
 .trendora-empty {
-  padding: 100px 30px;
+  padding: 80px 20px;
   text-align: center;
-  background: #f3f1ed;
+  background: #f5f3ef;
+  border-radius: 4px;
 }
 
 .trendora-empty h2 {
   margin: 0 0 15px;
-  font-size: 42px;
+  font-size: 36px;
 }
-
-.trendora-empty p:not(.trendora-eyebrow) {
-  color: #666;
-}
-
-.trendora-empty a {
-  display: inline-block;
-  margin-top: 20px;
-  color: #111;
-  font-weight: 600;
-}
-
-
-/* =========================
-   TABLET
-========================= */
 
 @media (max-width: 900px) {
-
-  .trendora-collection {
-    padding: 70px 5%;
-  }
-
   .trendora-collection__header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 20px;
   }
 
   .trendora-collection__grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
-
 }
 
-
-/* =========================
-   MOBILE
-========================= */
-
 @media (max-width: 600px) {
-
   .trendora-collection {
-    padding: 50px 20px;
-  }
-
-  .trendora-collection h1 {
-    letter-spacing: -2px;
-  }
-
-  .trendora-collection__header {
-    margin-bottom: 45px;
+    padding: 40px 0 60px;
   }
 
   .trendora-collection__toolbar {
-    align-items: flex-start;
     flex-direction: column;
-    gap: 18px;
+    align-items: flex-start;
+    gap: 12px;
   }
 
-  .trendora-collection__toolbar form {
+  .trendora-sort-form {
     width: 100%;
     justify-content: space-between;
   }
 
   .trendora-collection__grid {
     grid-template-columns: 1fr;
-    gap: 40px;
   }
-
 }
-
 </style>
+
+{% schema %}
+{
+  "name": "Collection Product Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 24,
+      "step": 6,
+      "default": 12,
+      "label": "Products per page"
+    }
+  ]
+}
+{% endschema %}

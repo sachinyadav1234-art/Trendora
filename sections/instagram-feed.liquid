@@ -1,0 +1,182 @@
+{% comment %}
+  Instagram Feed / UGC Photo Grid Section
+{% endcomment %}
+
+<div class="trendora-instagram-section">
+  <div class="trendora-instagram-inner">
+    <div class="trendora-instagram-header">
+      <h2 class="trendora-instagram-title">{{ section.settings.title | default: "Follow Us @Trendora" }}</h2>
+      <p class="trendora-instagram-subtitle">{{ section.settings.subtitle | default: "Tag #TrendoraStyle on Instagram for a chance to be featured!" }}</p>
+    </div>
+
+    <div class="trendora-instagram-grid">
+      {% for block in section.blocks %}
+        <div class="trendora-instagram-card" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Instagram Post" loading="lazy">
+          {% else %}
+            <div class="trendora-instagram-placeholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              <span>@trendora_style</span>
+            </div>
+          {% endif %}
+          <div class="trendora-instagram-overlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+        </div>
+      {% else %}
+        {% for i in (1..6) %}
+          <div class="trendora-instagram-card">
+            <div class="trendora-instagram-placeholder">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              <span>#TrendoraStyle</span>
+            </div>
+            <div class="trendora-instagram-overlay">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.trendora-instagram-section {
+  padding: 60px 5%;
+  background: var(--bg-color, #ffffff);
+}
+
+.trendora-instagram-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.trendora-instagram-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.trendora-instagram-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+
+.trendora-instagram-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.trendora-instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.trendora-instagram-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.trendora-instagram-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.trendora-instagram-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #888;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.trendora-instagram-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.trendora-instagram-card:hover .trendora-instagram-overlay {
+  opacity: 1;
+}
+
+.trendora-instagram-card:hover img {
+  transform: scale(1.05);
+}
+</style>
+
+{% schema %}
+{
+  "name": "Instagram Feed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Follow Us @Trendora"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Tag #TrendoraStyle on Instagram for a chance to be featured!"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "instagram_photo",
+      "name": "Instagram Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Feed"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+{% comment %}
+  Reusable Wishlist Heart Button Snippet
+  Usage: {% render 'wishlist-button', product: product %}
+{% endcomment %}
+<button
+  type="button"
+  class="trendora-wishlist-btn"
+  data-wishlist-handle="{{ product.handle }}"
+  onclick="trendoraToggleWishlist('{{ product.handle }}', this)"
+  aria-label="Add to wishlist"
+>
+  <svg class="icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+</button>
+
+<style>
+.trendora-wishlist-btn {
+  background: var(--surface-bg, rgba(255, 255, 255, 0.9));
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-color, #333);
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.trendora-wishlist-btn:hover {
+  transform: scale(1.1);
+  color: #e53935;
+}
+
+.trendora-wishlist-btn.active {
+  color: #e53935;
+  background: #ffebee;
+  border-color: #ef9a9a;
+}
+
+.trendora-wishlist-btn.active svg {
+  fill: #e53935;
+}
+</style>

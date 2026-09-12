@@ -1,386 +1,476 @@
-<header class="trendora-header">
+{% if section.settings.show_announcement %}
+  <div class="trendora-announcement">
+    <div class="trendora-announcement__content">
+      <p>{{ section.settings.announcement_text | default: "COMPLIMENTARY SHIPPING ON ORDERS OVER $100 | USE CODE TRENDORA2026" }}</p>
+    </div>
+  </div>
+{% endif %}
 
+<header class="trendora-header{% if section.settings.enable_sticky %} trendora-header--sticky{% endif %}" id="trendoraHeader">
   <div class="trendora-header__inner">
 
     <!-- Logo -->
     <a href="{{ routes.root_url }}" class="trendora-logo">
-      Trendora
+      {{ section.settings.logo_text | default: shop.name | default: 'Trendora' }}
     </a>
 
-
     <!-- Desktop Navigation -->
-    <nav class="trendora-nav">
-
-      <nav class="trendora-nav">
-  <a href="{{ routes.root_url }}">Home</a>
-  <a href="{{ routes.all_products_collection_url }}">Shop</a>
-  <a href="{{ routes.collections_url }}">Collections</a>
-  <a href="{{ routes.search_url }}">Search</a>
-
-
+    <nav class="trendora-nav" aria-label="Main Navigation">
+      {% if section.settings.menu != blank %}
+        {% for link in linklists[section.settings.menu].links %}
+          <a href="{{ link.url }}" class="{% if link.active %}active{% endif %}">
+            {{ link.title }}
+          </a>
+        {% endfor %}
+      {% else %}
+        <a href="{{ routes.root_url }}" class="active">Home</a>
+        <a href="{{ routes.all_products_collection_url }}">Shop</a>
+        <a href="{{ routes.collections_url }}">Collections</a>
+        <a href="{{ routes.search_url }}">Search</a>
+      {% endif %}
     </nav>
-
 
     <!-- Header Actions -->
     <div class="trendora-header__actions">
 
-      <!-- Search -->
-      <a
-        href="{{ routes.search_url }}"
-        class="trendora-header__icon"
-        aria-label="Search"
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-        >
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m20 20-4-4"></path>
+      <!-- Predictive Live Search Box -->
+      <div class="trendora-search-box">
+        <form action="{{ routes.search_url }}" method="get" class="trendora-search-form">
+          <input
+            type="search"
+            name="q"
+            id="trendoraSearchInput"
+            placeholder="Search products..."
+            autocomplete="off"
+            aria-label="Search products"
+          >
+          <button type="submit" aria-label="Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+        <!-- Predictive Results Popup -->
+        <div class="trendora-predictive-results" id="trendoraPredictiveResults" style="display: none;"></div>
+      </div>
+
+      <!-- Wishlist Icon -->
+      <a href="/pages/wishlist" class="trendora-header__icon" aria-label="Wishlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
+        <span class="trendora-cart-count trendora-wishlist-count--hidden" id="trendoraWishlistCount">0</span>
       </a>
 
-
-      <!-- Account -->
-      <a
-        href="{{ routes.account_url }}"
-        class="trendora-header__icon"
-        aria-label="Account"
-      >
-        <svg
-          width="25"
-          height="25"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-        >
-          <circle cx="12" cy="7" r="4"></circle>
-          <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path>
+      <!-- Dark Mode Toggle Button -->
+      <button type="button" class="trendora-header__icon trendora-dark-toggle" onclick="trendoraToggleDarkMode()" aria-label="Toggle Dark Mode">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-      </a>
+      </button>
 
-
-      <!-- Cart -->
-      <a
-        href="{{ routes.cart_url }}"
+      <!-- Cart Drawer Trigger Button -->
+      <button
+        type="button"
         class="trendora-header__cart"
-        aria-label="Cart"
+        onclick="trendoraOpenCartDrawer()"
+        aria-label="Shopping Cart with {{ cart.item_count }} items"
       >
-
         <svg
-          width="25"
-          height="25"
+          width="22"
+          height="22"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         >
-          <path d="M6 8h12l1 12H5L6 8Z"></path>
-          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
+        <span class="trendora-cart-count{% if cart.item_count == 0 %} trendora-cart-count--hidden{% endif %}" id="trendoraCartCount">
+          {{ cart.item_count }}
+        </span>
+      </button>
 
-        {% if cart.item_count > 0 %}
-          <span class="trendora-cart-count">
-            {{ cart.item_count }}
-          </span>
-        {% endif %}
-
-      </a>
+      <!-- Mobile Hamburger Menu Button -->
+      <button
+        class="trendora-menu-button"
+        type="button"
+        onclick="trendoraToggleMenu()"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        id="trendoraMenuBtn"
+      >
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
 
     </div>
 
-
-    <!-- Mobile Menu Button -->
-    <button
-      class="trendora-menu-button"
-      type="button"
-      onclick="trendoraToggleMenu()"
-      aria-label="Open menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
   </div>
 
-
-  <!-- Mobile Navigation -->
+  <!-- Mobile Navigation Drawer -->
   <div
     class="trendora-mobile-menu"
     id="trendoraMobileMenu"
+    aria-hidden="true"
   >
-
-    <a href="{{ routes.root_url }}">
-      Home
-    </a>
-
-    <a href="/collections/all">
-      Shop All
-    </a>
-
-    {% for collection in collections limit: 5 %}
-      {% unless collection.handle == 'all' %}
-        <a href="{{ collection.url }}">
-          {{ collection.title }}
-        </a>
-      {% endunless %}
-    {% endfor %}
-
-    <a href="{{ routes.search_url }}">
-      Search
-    </a>
-
-    <a href="{{ routes.cart_url }}">
-      Cart
-      {% if cart.item_count > 0 %}
-        ({{ cart.item_count }})
+    <nav aria-label="Mobile Navigation">
+      <a href="{{ routes.root_url }}">Home</a>
+      <a href="{{ routes.all_products_collection_url }}">Shop All</a>
+      <a href="{{ routes.collections_url }}">Collections</a>
+      <a href="{{ routes.search_url }}">Search</a>
+      <a href="#" onclick="trendoraOpenCartDrawer(); return false;">
+        Cart {% if cart.item_count > 0 %}({{ cart.item_count }}){% endif %}
+      </a>
+      {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}">My Account</a>
       {% endif %}
-    </a>
-
+    </nav>
   </div>
 
 </header>
 
-
 <style>
+/* Announcement Bar */
+.trendora-announcement {
+  background: var(--text-color, #171717);
+  color: var(--bg-color, #ffffff);
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.trendora-announcement p {
+  margin: 0;
+}
 
-/* =========================
-   TRENDORA HEADER
-========================= */
-
+/* Header Base */
 .trendora-header {
   position: relative;
-  z-index: 50;
+  z-index: 100;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.trendora-header--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.trendora-header--scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .trendora-header__inner {
   max-width: 1450px;
   min-height: 80px;
   margin: 0 auto;
-  padding: 0 5%;
+  padding: 0 4%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
+  gap: 20px;
 }
-
 
 /* Logo */
-
 .trendora-logo {
-  color: #171717;
-  text-decoration: none;
-  font-size: 27px;
+  color: currentColor;
+  font-size: 26px;
   font-weight: 800;
   letter-spacing: -1px;
+  text-decoration: none;
 }
 
-
 /* Navigation */
-
 .trendora-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 32px;
+  gap: 28px;
 }
 
 .trendora-nav a {
   position: relative;
-  color: #333;
-  text-decoration: none;
+  color: currentColor;
   font-size: 14px;
   font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 0;
+  text-decoration: none;
 }
 
 .trendora-nav a::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -6px;
+  bottom: 0;
   width: 0;
-  height: 1px;
-  background: #111;
-  transition: width .25s ease;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.25s ease;
 }
 
-.trendora-nav a:hover::after {
+.trendora-nav a:hover::after,
+.trendora-nav a.active::after {
   width: 100%;
 }
 
-
-/* Actions */
-
+/* Header Actions */
 .trendora-header__actions {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 14px;
 }
 
+/* Search Box */
+.trendora-search-box {
+  position: relative;
+}
+
+.trendora-search-form {
+  display: flex;
+  align-items: center;
+  background: var(--surface-bg, #f4f4f4);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.trendora-search-form input {
+  border: none;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: currentColor;
+  outline: none;
+  width: 150px;
+  transition: width 0.3s ease;
+}
+
+.trendora-search-form input:focus {
+  width: 200px;
+}
+
+.trendora-search-form button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: currentColor;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.trendora-predictive-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  min-width: 280px;
+  background: var(--bg-color, #ffffff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.trendora-predictive-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: currentColor;
+  border-bottom: 1px solid var(--border-color, #f0f0f0);
+}
+
+.trendora-predictive-item:hover {
+  background: var(--surface-bg, #f9f9f9);
+}
+
+.trendora-predictive-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.trendora-predictive-item__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.trendora-predictive-item__price {
+  font-size: 12px;
+  color: #777;
+}
+
+.trendora-predictive-empty {
+  padding: 15px;
+  font-size: 13px;
+  text-align: center;
+  color: #888;
+}
+
+/* Action Icons */
 .trendora-header__icon,
 .trendora-header__cart {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  color: #171717;
-  text-decoration: none;
+  justify-content: center;
+  color: currentColor;
+  padding: 8px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.trendora-header__icon:hover,
+.trendora-header__cart:hover {
+  background-color: var(--surface-bg, #f5f5f5);
 }
 
 .trendora-cart-count {
   position: absolute;
-  top: -9px;
-  right: -10px;
-  min-width: 17px;
-  height: 17px;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: #171717;
-  color: white;
+  color: #ffffff;
   font-size: 10px;
   font-weight: 700;
 }
 
+.trendora-cart-count--hidden,
+.trendora-wishlist-count--hidden {
+  display: none;
+}
 
-/* Mobile button */
+/* Dark Toggle */
+.trendora-dark-toggle {
+  display: inline-flex;
+}
 
+/* Mobile Hamburger Button */
 .trendora-menu-button {
   display: none;
-  width: 38px;
-  height: 38px;
-  padding: 7px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
   border: 0;
   background: transparent;
+  flex-direction: column;
+  justify-content: space-around;
   cursor: pointer;
 }
 
-.trendora-menu-button span {
+.trendora-menu-button .bar {
   display: block;
   width: 100%;
   height: 2px;
-  margin: 5px 0;
-  background: #171717;
+  background-color: currentColor;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
-
-
-/* Mobile menu */
-
-.trendora-mobile-menu {
-  display: none;
-}
-
-
-/* =========================
-   TABLET
-========================= */
 
 @media (max-width: 900px) {
-
-  .trendora-nav {
-    gap: 18px;
-  }
-
-  .trendora-nav a {
-    font-size: 13px;
-  }
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 700px) {
-
-  .trendora-header__inner {
-    min-height: 70px;
-    padding: 0 20px;
-  }
-
   .trendora-nav {
     display: none;
   }
-
-  .trendora-header__actions {
-    margin-left: auto;
-    gap: 16px;
+  .trendora-search-form input {
+    width: 100px;
   }
-
-  .trendora-header__actions .trendora-header__icon:first-child {
-    display: none;
+  .trendora-search-form input:focus {
+    width: 140px;
   }
-
   .trendora-menu-button {
-    display: block;
-  }
-
-
-  .trendora-mobile-menu {
-    display: none;
-    padding: 20px;
-    border-top: 1px solid #eee;
-    background: #fff;
-  }
-
-  .trendora-mobile-menu.active {
     display: flex;
-    flex-direction: column;
   }
-
-  .trendora-mobile-menu a {
-    padding: 16px 0;
-    border-bottom: 1px solid #eee;
-    color: #171717;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
 }
-
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media (max-width: 400px) {
-
-  .trendora-logo {
-    font-size: 23px;
-  }
-
-  .trendora-header__actions {
-    gap: 12px;
-  }
-
-}
-
 </style>
 
-
 <script>
-
 function trendoraToggleMenu() {
+  const menu = document.getElementById('trendoraMobileMenu');
+  const btn = document.getElementById('trendoraMenuBtn');
+  if (!menu || !btn) return;
 
-  const menu = document.getElementById(
-    'trendoraMobileMenu'
-  );
-
-  if (!menu) return;
-
-  menu.classList.toggle('active');
-
+  const isActive = menu.classList.toggle('active');
+  btn.classList.toggle('active');
+  btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+  menu.setAttribute('aria-hidden', isActive ? 'false' : 'true');
 }
 
+window.addEventListener('scroll', function() {
+  const header = document.getElementById('trendoraHeader');
+  if (header && window.scrollY > 20) {
+    header.classList.add('trendora-header--scrolled');
+  } else if (header) {
+    header.classList.remove('trendora-header--scrolled');
+  }
+});
 </script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Store Logo Text",
+      "default": "Trendora"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Navigation Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "COMPLIMENTARY SHIPPING ON ORDERS OVER $100 | USE CODE TRENDORA2026"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable Sticky Header",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

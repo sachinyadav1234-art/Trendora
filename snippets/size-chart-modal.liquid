@@ -1,0 +1,176 @@
+{% comment %}
+  Size Chart Popup Modal Snippet
+  Usage: {% render 'size-chart-modal' %}
+{% endcomment %}
+
+<div class="trendora-modal-overlay" id="trendoraSizeChartOverlay" onclick="trendoraCloseSizeChart()"></div>
+
+<div class="trendora-modal" id="trendoraSizeChartModal" aria-hidden="true" role="dialog" aria-label="Size Guide">
+  <div class="trendora-modal__header">
+    <h3>Sizing Guide</h3>
+    <button type="button" class="trendora-modal__close" onclick="trendoraCloseSizeChart()" aria-label="Close size guide">✕</button>
+  </div>
+  <div class="trendora-modal__body">
+    <p>Find your perfect fit using our standard body measurements below (in inches/cm).</p>
+    <div class="trendora-table-responsive">
+      <table class="trendora-size-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Chest (in)</th>
+            <th>Waist (in)</th>
+            <th>Hips (in)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>XS</strong></td>
+            <td>32 - 34</td>
+            <td>26 - 28</td>
+            <td>34 - 36</td>
+          </tr>
+          <tr>
+            <td><strong>S</strong></td>
+            <td>35 - 37</td>
+            <td>29 - 31</td>
+            <td>37 - 39</td>
+          </tr>
+          <tr>
+            <td><strong>M</strong></td>
+            <td>38 - 40</td>
+            <td>32 - 34</td>
+            <td>40 - 42</td>
+          </tr>
+          <tr>
+            <td><strong>L</strong></td>
+            <td>41 - 43</td>
+            <td>35 - 37</td>
+            <td>43 - 45</td>
+          </tr>
+          <tr>
+            <td><strong>XL</strong></td>
+            <td>44 - 46</td>
+            <td>38 - 40</td>
+            <td>46 - 48</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="trendora-size-tip">
+      💡 <strong>Measuring Tip:</strong> Measure around the fullest part of your chest and narrowest part of your waist for the most accurate fit.
+    </div>
+  </div>
+</div>
+
+<style>
+.trendora-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.trendora-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.trendora-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  width: 90%;
+  max-width: 550px;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  border-radius: 8px;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.trendora-modal.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+}
+
+.trendora-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.trendora-modal__header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.trendora-modal__close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: currentColor;
+}
+
+.trendora-modal__body {
+  padding: 20px 24px;
+}
+
+.trendora-table-responsive {
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.trendora-size-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.trendora-size-table th, .trendora-size-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.trendora-size-table th {
+  background: var(--surface-bg, #f5f5f5);
+  font-weight: 700;
+}
+
+.trendora-size-tip {
+  font-size: 12px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+</style>
+
+<script>
+function trendoraOpenSizeChart() {
+  document.getElementById('trendoraSizeChartModal').classList.add('active');
+  document.getElementById('trendoraSizeChartOverlay').classList.add('active');
+}
+
+function trendoraCloseSizeChart() {
+  document.getElementById('trendoraSizeChartModal').classList.remove('active');
+  document.getElementById('trendoraSizeChartOverlay').classList.remove('active');
+}
+</script>
