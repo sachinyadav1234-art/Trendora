@@ -15,8 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
  * ========================================== */
 function trendoraInitTheme() {
   const savedTheme = localStorage.getItem('trendora_theme');
-  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (savedTheme === 'dark') {
     document.documentElement.classList.add('dark-theme');
+  } else {
+    document.documentElement.classList.remove('dark-theme');
   }
 }
 
