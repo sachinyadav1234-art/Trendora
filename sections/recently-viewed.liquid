@@ -15,6 +15,7 @@
 .trendora-recently-viewed {
   padding: 60px 5%;
   background: var(--surface-bg, #fafafa);
+  color: var(--text-color, #171717);
   border-top: 1px solid var(--border-color, #eee);
 }
 
@@ -28,12 +29,18 @@
   font-size: 24px;
   font-weight: 800;
   margin-bottom: 30px;
+  color: var(--text-color, #171717);
 }
 
 .trendora-recently-viewed__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
+}
+
+.trendora-recently-viewed__grid a {
+  color: var(--text-color, #171717);
+  text-decoration: none;
 }
 </style>
 

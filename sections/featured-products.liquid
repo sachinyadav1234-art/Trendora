@@ -89,7 +89,8 @@
 <style>
 .trendora-products {
   padding: 80px 0;
-  background: #ffffff;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
 }
 
 .trendora-products__header {
@@ -105,7 +106,7 @@
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
-  color: #171717;
+  color: var(--text-color, #171717);
 }
 
 .trendora-products h2 {
@@ -113,14 +114,14 @@
   font-size: clamp(32px, 4vw, 48px);
   letter-spacing: -1.5px;
   font-weight: 800;
-  color: #171717;
+  color: var(--text-color, #171717);
 }
 
 .trendora-products__link {
-  color: #171717;
+  color: var(--text-color, #171717);
   font-weight: 700;
   text-decoration: none;
-  border-bottom: 2px solid #171717;
+  border-bottom: 2px solid var(--border-color, #171717);
   padding-bottom: 4px;
   font-size: 14px;
 }
@@ -139,7 +140,7 @@
   position: relative;
   display: block;
   overflow: hidden;
-  background: #f3f1ed;
+  background: var(--surface-bg, #f3f1ed);
   aspect-ratio: 3 / 4;
 }
 
@@ -161,7 +162,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eee;
+  background: var(--surface-bg, #eee);
 }
 
 .trendora-card-badge {
@@ -176,14 +177,14 @@
 }
 
 .trendora-card-badge--sale {
-  background: #171717;
-  color: #ffffff;
+  background: var(--badge-bg, #171717);
+  color: var(--badge-text, #ffffff);
 }
 
 .trendora-card-badge--sold {
-  background: #ffffff;
-  color: #171717;
-  border: 1px solid #171717;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  border: 1px solid var(--border-color, #171717);
 }
 
 .trendora-product-card__info {
@@ -198,7 +199,7 @@
 }
 
 .trendora-product-card h3 a {
-  color: #171717;
+  color: var(--text-color, #171717);
   text-decoration: none;
 }
 
@@ -211,12 +212,12 @@
 .trendora-product-card__price {
   font-size: 15px;
   font-weight: 700;
-  color: #171717;
+  color: var(--text-color, #171717);
 }
 
 .trendora-product-card__compare-price {
   font-size: 14px;
-  color: #888888;
+  color: var(--text-muted, #888888);
   text-decoration: line-through;
 }
 

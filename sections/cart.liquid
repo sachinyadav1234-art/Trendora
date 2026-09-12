@@ -269,8 +269,9 @@
 .trendora-update {
   margin-top: 20px;
   padding: 13px 25px;
-  background: white;
-  border: 1px solid #222;
+  background: var(--input-bg, white);
+  color: var(--input-text, #171717);
+  border: 1px solid var(--border-color, #222);
   cursor: pointer;
   font-weight: 600;
 }
@@ -278,7 +279,9 @@
 /* Summary */
 
 .trendora-summary {
-  background: #f4f2ee;
+  background: var(--surface-bg, #f4f2ee);
+  color: var(--text-color, #171717);
+  border: 1px solid var(--border-color, transparent);
   padding: 35px;
   position: sticky;
   top: 30px;
@@ -288,18 +291,19 @@
   font-size: 24px;
   margin-top: 0;
   margin-bottom: 30px;
+  color: var(--text-color, #171717);
 }
 
 .trendora-summary-row {
   display: flex;
   justify-content: space-between;
   padding-bottom: 25px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--border-color, #ccc);
   font-size: 17px;
 }
 
 .trendora-summary-note {
-  color: #777;
+  color: var(--text-muted, #777);
   font-size: 13px;
   line-height: 1.5;
   margin: 20px 0;
@@ -309,22 +313,22 @@
   width: 100%;
   padding: 17px;
   border: 0;
-  background: #171717;
-  color: white;
+  background: var(--btn-primary-bg, #171717);
+  color: var(--btn-primary-text, white);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
 }
 
 .trendora-checkout:hover {
-  background: #333;
+  opacity: 0.9;
 }
 
 .trendora-continue {
   display: block;
   text-align: center;
   margin-top: 20px;
-  color: #222;
+  color: var(--text-color, #222);
   text-decoration: underline;
 }
 
@@ -333,7 +337,9 @@
 .trendora-empty-cart {
   text-align: center;
   padding: 100px 20px;
-  background: #f4f2ee;
+  background: var(--surface-bg, #f4f2ee);
+  color: var(--text-color, #171717);
+  border-radius: 4px;
 }
 
 .trendora-empty-icon {
@@ -343,18 +349,19 @@
 .trendora-empty-cart h2 {
   font-size: 35px;
   margin: 20px 0 10px;
+  color: var(--text-color, #171717);
 }
 
 .trendora-empty-cart p {
-  color: #666;
+  color: var(--text-muted, #666);
   margin-bottom: 30px;
 }
 
 .trendora-shop-button {
   display: inline-block;
   padding: 16px 30px;
-  background: #171717;
-  color: white;
+  background: var(--btn-primary-bg, #171717);
+  color: var(--btn-primary-text, white);
   text-decoration: none;
   font-weight: 700;
 }

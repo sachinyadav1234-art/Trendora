@@ -302,14 +302,14 @@
 }
 
 .trendora-pdp-badge--sale {
-  background: #171717;
-  color: #ffffff;
+  background: var(--badge-bg, #171717);
+  color: var(--badge-text, #ffffff);
 }
 
 .trendora-pdp-badge--sold {
-  background: #ffffff;
-  color: #171717;
-  border: 1px solid #171717;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  border: 1px solid var(--border-color, #171717);
 }
 
 .trendora-thumbnails {
@@ -321,8 +321,8 @@
 }
 
 .trendora-thumb-btn {
-  border: 1px solid #e0e0e0;
-  background: white;
+  border: 1px solid var(--border-color, #e0e0e0);
+  background: var(--surface-bg, #ffffff);
   padding: 3px;
   cursor: pointer;
   width: 80px;
@@ -334,7 +334,7 @@
 
 .trendora-thumb-btn:hover,
 .trendora-thumb-btn.active {
-  border-color: #171717;
+  border-color: var(--text-color, #171717);
 }
 
 .trendora-thumb-btn img {
@@ -344,7 +344,7 @@
 }
 
 .trendora-no-image {
-  background: #f4f2ee;
+  background: var(--surface-bg, #f4f2ee);
   padding: 120px 20px;
   text-align: center;
   border-radius: 4px;
@@ -387,7 +387,7 @@
 
 .trendora-compare-price {
   font-size: 20px;
-  color: #888888;
+  color: var(--text-muted, #888888);
   text-decoration: line-through;
 }
 
@@ -399,18 +399,18 @@
 }
 
 .trendora-sold {
-  color: #888888;
+  color: var(--text-muted, #888888);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 16px;
 }
 
 .trendora-description {
-  color: #555555;
+  color: var(--text-muted, #555555);
   line-height: 1.7;
   font-size: 16px;
   margin-bottom: 30px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color, #f0f0f0);
   padding-top: 20px;
 }
 
@@ -429,8 +429,8 @@
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--border-color, #171717);
-  background: var(--bg-color, white);
-  color: currentColor;
+  background: var(--input-bg, white);
+  color: var(--input-text, currentColor);
   font-size: 15px;
   border-radius: 2px;
   outline: none;
@@ -456,8 +456,8 @@
   width: 44px;
   height: 44px;
   border: 0;
-  background: var(--bg-color, white);
-  color: currentColor;
+  background: var(--input-bg, white);
+  color: var(--input-text, currentColor);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -470,16 +470,16 @@
   text-align: center;
   font-size: 16px;
   font-weight: 600;
-  background: var(--bg-color, white);
-  color: currentColor;
+  background: var(--input-bg, white);
+  color: var(--input-text, currentColor);
 }
 
 /* Add to cart */
 .trendora-add-cart {
   width: 100%;
   padding: 18px;
-  background: #171717;
-  color: white;
+  background: var(--btn-primary-bg, #171717);
+  color: var(--btn-primary-text, #ffffff);
   border: none;
   font-size: 16px;
   font-weight: 700;

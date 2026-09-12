@@ -137,7 +137,7 @@
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
-  color: #171717;
+  color: var(--text-color, #171717);
 }
 
 .trendora-collection h1 {
@@ -146,11 +146,12 @@
   line-height: 1.05;
   letter-spacing: -2px;
   font-weight: 800;
+  color: var(--text-color, #171717);
 }
 
 .trendora-collection__description {
   max-width: 450px;
-  color: #555555;
+  color: var(--text-muted, #555555);
   line-height: 1.6;
   font-size: 16px;
 }
@@ -159,15 +160,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
   padding: 16px 0;
   margin-bottom: 40px;
 }
 
 .trendora-collection__count {
   margin: 0;
-  color: #555555;
+  color: var(--text-muted, #555555);
   font-size: 14px;
   font-weight: 600;
 }
@@ -181,13 +182,14 @@
 .trendora-sort-form label {
   font-size: 14px;
   font-weight: 600;
-  color: #171717;
+  color: var(--text-color, #171717);
 }
 
 .trendora-sort-form select {
   padding: 8px 14px;
-  border: 1px solid #171717;
-  background: white;
+  border: 1px solid var(--border-color, #171717);
+  background: var(--input-bg, #ffffff);
+  color: var(--input-text, #171717);
   font-size: 14px;
   border-radius: 2px;
   outline: none;
@@ -208,7 +210,7 @@
   position: relative;
   display: block;
   aspect-ratio: 3 / 4;
-  background: #f3f1ed;
+  background: var(--surface-bg, #f3f1ed);
   overflow: hidden;
   border-radius: 2px;
 }
@@ -237,14 +239,14 @@
 }
 
 .trendora-badge--sale {
-  background: #171717;
-  color: #ffffff;
+  background: var(--badge-bg, #171717);
+  color: var(--badge-text, #ffffff);
 }
 
 .trendora-badge--sold {
-  background: #ffffff;
-  color: #171717;
-  border: 1px solid #171717;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #171717);
+  border: 1px solid var(--border-color, #171717);
 }
 
 .trendora-collection-card__info {
@@ -258,7 +260,7 @@
 }
 
 .trendora-collection-card__info h2 a {
-  color: #171717;
+  color: var(--text-color, #171717);
   text-decoration: none;
 }
 
@@ -278,11 +280,12 @@
 .trendora-price {
   font-size: 16px;
   font-weight: 700;
+  color: var(--text-color, #171717);
 }
 
 .trendora-compare-price {
   font-size: 14px;
-  color: #888888;
+  color: var(--text-muted, #888888);
   text-decoration: line-through;
 }
 
@@ -295,7 +298,7 @@
 }
 
 .trendora-sold {
-  color: #888888;
+  color: var(--text-muted, #888888);
   font-size: 12px;
   font-weight: 600;
 }
@@ -310,22 +313,23 @@
   display: inline-block;
   margin: 0 4px;
   padding: 10px 16px;
-  color: #171717;
-  border: 1px solid #e0e0e0;
+  color: var(--text-color, #171717);
+  border: 1px solid var(--border-color, #e0e0e0);
   font-weight: 600;
   text-decoration: none;
 }
 
 .trendora-pagination .current {
-  background: #171717;
-  color: #ffffff;
-  border-color: #171717;
+  background: var(--btn-primary-bg, #171717);
+  color: var(--btn-primary-text, #ffffff);
+  border-color: var(--btn-primary-bg, #171717);
 }
 
 .trendora-empty {
   padding: 80px 20px;
   text-align: center;
-  background: #f5f3ef;
+  background: var(--surface-bg, #f5f3ef);
+  color: var(--text-color, #171717);
   border-radius: 4px;
 }
 

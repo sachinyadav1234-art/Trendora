@@ -202,7 +202,7 @@
 
 .trendora-shipping-bar__progress {
   height: 100%;
-  background: #171717;
+  background: var(--text-color, #171717);
   border-radius: 10px;
   transition: width 0.4s ease;
 }
@@ -227,14 +227,14 @@
 .trendora-cart-drawer__empty p {
   font-size: 15px;
   margin-bottom: 20px;
-  color: #666;
+  color: var(--text-muted, #666);
 }
 
 .trendora-btn {
   display: inline-block;
   padding: 12px 24px;
-  background: #171717;
-  color: #ffffff;
+  background: var(--btn-primary-bg, #171717);
+  color: var(--btn-primary-text, #ffffff);
   text-decoration: none;
   font-weight: 600;
   border-radius: 4px;
@@ -243,11 +243,11 @@
   font-size: 14px;
   text-align: center;
   width: 100%;
-  transition: background 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .trendora-btn:hover {
-  background: #333333;
+  opacity: 0.9;
 }
 
 /* Drawer Items */
