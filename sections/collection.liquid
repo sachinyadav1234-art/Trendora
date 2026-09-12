@@ -38,7 +38,8 @@
   </div>
 
   <!-- Products Grid -->
-  {% paginate collection.products by section.settings.products_per_page | default: 12 %}
+  {% assign limit = section.settings.products_per_page | default: 12 %}
+  {% paginate collection.products by limit %}
 
     {% if collection.products.size > 0 %}
 
